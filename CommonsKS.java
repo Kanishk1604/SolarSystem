@@ -121,7 +121,7 @@ public class CommonsKS extends JPanel {
 	/* a function to place one light or two lights at opposite locations */
 	public static BranchGroup add_Lights(Color3f clr, int p_num) {
 		BranchGroup lightBG = new BranchGroup();
-		Point3f atn = new Point3f(0.5f, 0.0f, 0.0f);
+		Point3f atn = new Point3f(0.0f, 0.0f, 0.0f);
 		PointLight ptLight;
 		float adjt = 1f;
 		for (int i = 0; (i < p_num) && (i < 2); i++) {
