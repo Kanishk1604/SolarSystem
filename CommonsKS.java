@@ -98,7 +98,7 @@ public class CommonsKS extends JPanel {
 
 	public static Background create_BK(Color3f clr,BoundingSphere b){
 		Background bg = new Background();
-		bg.setImage(new TextureLoader("C:\\CompKS2800\\compKS2800\\src\\mrbean.gif",null).getImage());
+		bg.setImage(new TextureLoader("C:\\CompKS2800\\compKS2800\\src\\space.jpg",null).getImage());
 		bg.setImageScaleMode(Background.SCALE_FIT_MAX);
 		bg.setApplicationBounds(b);
 		bg.setColor(clr);
