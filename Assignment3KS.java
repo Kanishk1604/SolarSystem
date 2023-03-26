@@ -29,22 +29,7 @@ public class Assignment3KS extends JPanel {
 		BranchGroup sceneBG = new BranchGroup();           // create the scene' BranchGroup
 		TransformGroup sceneTG = new TransformGroup(); 
 		TransformGroup baseTG = new TransformGroup();   // create the scene's TransformGroup
-		// Vector3f[] post = new Vector3f[4];
-		// post[0] = new Vector3f(.5f,0,0.5f);
-		// post[1] = new Vector3f(-.5f,0,0.5f);
-		// post[2] = new Vector3f(-.5f,0,-0.5f);
-		// post[3] = new Vector3f(.5f,0,-0.5f); 
 
-		// RingObjectsKS[] Assign2Shapes = new RingObjectsKS[OBJ_NUM];
-		// Assign2Shapes[0] = new MyCylinderA2();
-		// RingObjectsKS[] box = new RingObjectsKS[2];
-		// box[0] = new BoxA2();
-		// box[1] = new BoxA2();
-
-		// Transform3D boxT3D = new Transform3D();
-		// boxT3D.rotY(Math.PI/2);
-		// TransformGroup boxTG = new TransformGroup(boxT3D);
-		// boxTG.addChild(box[1].position_Object());
 
 		TransformGroup R1 = new TransformGroup();
 		TransformGroup cir  = new TransformGroup();
@@ -52,43 +37,89 @@ public class Assignment3KS extends JPanel {
 		TransformGroup R4 = new TransformGroup();
 
 		float x = (float) 0.9;
+
+		
+		RingObjectsKS sun = new Ring1(CommonsKS.Blue,(float)1,(float)0.0f);           // create the external object		
+		RingObjectsKS mercury = new Ring1(CommonsKS.White,(float)1,(float)x);           // create the external object		
+		RingObjectsKS venus = new Ring1(CommonsKS.White,(float)1,(float)2);           // create the external object		
+		RingObjectsKS earth = new Ring1(CommonsKS.White,(float)1,(float)3);           // create the external object		
+		RingObjectsKS mars = new Ring1(CommonsKS.White,(float)1,(float)4);           // create the external object		
+		RingObjectsKS jupiter = new Ring1(CommonsKS.White,(float)0.35,(float)5);           // create the external object		
+		RingObjectsKS saturn = new export("Saturn",CommonsKS.White,(float)1,(float)0.0,(float)0.0f,(float)6);           // create the external object		
+		RingObjectsKS uranus = new Ring1(CommonsKS.White,(float)1,(float)7);           // create the external object		
+		RingObjectsKS neptune = new Ring1(CommonsKS.White,(float)1,(float)8);           // create the external object		
+		RingObjectsKS pluto = new Ring1(CommonsKS.White,(float)1,(float)9);           // create the external object		
+		
+		
+		TransformGroup sunTG= new TransformGroup();
+		TransformGroup mercuryTG = new TransformGroup();
+		TransformGroup venusTG = new TransformGroup();
+		TransformGroup earthTG = new TransformGroup();
+		TransformGroup marsTG = new TransformGroup();
+		TransformGroup jupiterTG = new TransformGroup();
+		TransformGroup saturnTG = new TransformGroup();
+		TransformGroup uranusTG = new TransformGroup();
+		TransformGroup neptuneTG = new TransformGroup();
+		TransformGroup plutoTG = new TransformGroup();
+		
+		
+
 	
-		RingObjectsKS ring1 = new Ring1("sun",CommonsKS.Blue,(float)0.35,(float)0.0,(float)0.0f,(float)0.0f);           // create the external object		
-		RingObjectsKS mercury = new Ring1("Mercury",CommonsKS.White,(float)0.1,(float)0.0,(float)0.0f,(float)x);           // create the external object		
-		RingObjectsKS venus = new Ring1("Venus",CommonsKS.White,(float)0.2,(float)0.0,(float)0.0f,(float)x*2);           // create the external object		
-		RingObjectsKS earth = new Ring1("Earth",CommonsKS.Blue,(float)0.35,(float)0.0,(float)0.0f,(float)x*3);           // create the external object		
-		RingObjectsKS mars = new Ring1("Mars",CommonsKS.Blue,(float)0.35,(float)0.0,(float)0.0f,(float)x*4);           // create the external object		
-		RingObjectsKS jupiter = new Ring1("Jupiter",CommonsKS.Blue,(float)0.35,(float)0.0,(float)0.0f,(float)x*5);           // create the external object		
-		RingObjectsKS saturn = new Ring1("Saturn",CommonsKS.Blue,(float)1,(float)0.0,(float)0.0f,(float)x*6);           // create the external object		
-		RingObjectsKS uranus = new Ring1("Uranus",CommonsKS.Blue,(float)0.35,(float)0.0,(float)0.0f,(float)x*7);           // create the external object		
-		RingObjectsKS neptune = new Ring1("Neptune",CommonsKS.Blue,(float)0.35,(float)0.0,(float)0.0f,(float)x*8);           // create the external object		
-		RingObjectsKS pluto = new Ring1("Pluto",CommonsKS.Blue,(float)0.35,(float)0.0,(float)0.0f,(float)9);           // create the external object		
+		sunTG.addChild(sun.position_Object());     
+		           
+		mercuryTG.addChild(mercury.position_Object());   
+
+		mercuryTG.addChild(CommonsKS.rotate_Behavior(50000,mercuryTG));
+		mercuryTG.addChild(CommonsKS.rotating(40000, mercuryTG));             
+		venusTG.addChild(venus.position_Object());                // addding child ring1
+		venusTG.addChild(CommonsKS.rotate_Behavior(5000,venusTG));
+
+		earthTG.addChild(earth.position_Object());                // addding child ring1	
+		earthTG.addChild(CommonsKS.rotate_Behavior(5000,earthTG));
+
+		marsTG.addChild(mars.position_Object());                // addding child ring1	
+		marsTG.addChild(CommonsKS.rotate_Behavior(5000,marsTG));
+
+		jupiterTG.addChild(jupiter.position_Object());                // addding child ring1	
+		jupiterTG.addChild(CommonsKS.rotate_Behavior(5000,jupiterTG));
+
+		saturnTG.addChild(saturn.position_Object());                // addding child ring1	
+		saturnTG.addChild(CommonsKS.rotate_Behavior(5000,saturnTG));
+
+		uranusTG.addChild(uranus.position_Object());                // addding child ring1	
+		uranusTG.addChild(CommonsKS.rotate_Behavior(5000,uranusTG));
+
+		neptuneTG.addChild(neptune.position_Object());                // addding child ring1	
+		neptuneTG.addChild(CommonsKS.rotate_Behavior(5000,neptuneTG));
+
+		plutoTG.addChild(pluto.position_Object());                // addding child ring1	
+		plutoTG.addChild(CommonsKS.rotate_Behavior(5000,plutoTG));
+
 		
-		
+		R1.addChild(sunTG);
+		R1.addChild(mercuryTG);
+		R1.addChild(venusTG);
+		R1.addChild(earthTG);
+		R1.addChild(marsTG);
+		R1.addChild(jupiterTG);
+		R1.addChild(saturnTG);
+		R1.addChild(uranusTG);
+		R1.addChild(neptuneTG);
+		R1.addChild(plutoTG);
+
+		//R1.addChild(CommonsKS.rotate_Behavior(5000,R1));
+
+		//orbits
 		RingObjectsKS merOrb = new circle((float)x);
-		RingObjectsKS venOrb = new circle((float)x*2);
-		RingObjectsKS EarthOrb = new circle((float)x*3);
-		RingObjectsKS MarsOrb = new circle((float)x*4);
-		RingObjectsKS JupiterOrb = new circle((float)x*5);
-		RingObjectsKS SatOrb = new circle((float)x*6);
-		RingObjectsKS UrAnusOrb = new circle((float)x*7);
-		RingObjectsKS NepOrb = new circle((float)x*8);
+		RingObjectsKS venOrb = new circle((float)2);
+		RingObjectsKS EarthOrb = new circle((float)3);
+		RingObjectsKS MarsOrb = new circle((float)4);
+		RingObjectsKS JupiterOrb = new circle((float)5);
+		RingObjectsKS SatOrb = new circle((float)6);
+		RingObjectsKS UrAnusOrb = new circle((float)7);
+		RingObjectsKS NepOrb = new circle((float)8);
 		RingObjectsKS PlutoOrb = new circle((float)9);
-		// RingObjectsKS ring2 = new Ring2("med",CommonsKS.Red);           // create the external object		
-		// RingObjectsKS ring3 = new Ring3("big",CommonsKS.Green);           // create the external object		
-		// RingObjectsKS ring4 = new Ring4("biggest",CommonsKS.Blue);           // create the external object		
 		
-		R1.addChild(ring1.position_Object());                // addding child ring1	
-		R1.addChild(mercury.position_Object());                // addding child ring1	
-		R1.addChild(venus.position_Object());                // addding child ring1	
-		R1.addChild(earth.position_Object());                // addding child ring1	
-		R1.addChild(mars.position_Object());                // addding child ring1	
-		R1.addChild(jupiter.position_Object());                // addding child ring1	
-		R1.addChild(saturn.position_Object());                // addding child ring1	
-		R1.addChild(uranus.position_Object());                // addding child ring1	
-		R1.addChild(neptune.position_Object());                // addding child ring1	
-		R1.addChild(pluto.position_Object());                // addding child ring1	
-	
 
 		cir.addChild(merOrb.position_Object());
 		cir.addChild(venOrb.position_Object());
@@ -101,55 +132,6 @@ public class Assignment3KS extends JPanel {
 		cir.addChild(PlutoOrb.position_Object());
 
 	
-		// //adding cylinders
-		// SharedGroup sharedGroup = new SharedGroup();
-		// sharedGroup.addChild(Assign2Shapes[0].position_Object());
-		// Link[] link = new Link[4];
-		// for (int i = 0; i < 4; i++) {
-		// 	link[i] = new Link(sharedGroup);
-		// 	Transform3D transform = new Transform3D();
-		// 	transform.setTranslation(post[i]);
-		// 	TransformGroup transformGroup = new TransformGroup(transform);
-		// 	transformGroup.addChild(link[i]);
-		// 	baseTG.addChild(transformGroup);
-		// }
-
-		// //adding base boxes
-		// baseTG.addChild(boxTG);
-		// baseTG.addChild(box[0].position_Object());
-		// baseTG.addChild(new StringA2("KS's Assignment 3").position_Object());
- 
-
-	 	// float t3dMat[] = {1,0,0,0, 
-		// 				  0,1,0,0, 
-		// 				  0,0,0.25f,0, 
-		// 				  0,0,0,1};  // Matrix to scale objects by 1/4 on Z axis and translate 2.2 down
-		// Transform3D t3d = new Transform3D(t3dMat);
-		// Transform3D translator = new Transform3D();
-		// translator.setTranslation(new Vector3f(0,-1f,0));
-		// Transform3D trfm2 = new Transform3D();
-		// trfm2.mul(t3d, translator);
-		// baseTG.setTransform(trfm2);
-		// sceneTG.addChild(baseTG);
-
-		//adding background
-
-        // TransformGroup rr1 = new TransformGroup();
-        // TransformGroup rr2 = new TransformGroup();
-        // TransformGroup rr3 = new TransformGroup();
-
-		//adding transform group as a chain
-    //     rr1.addChild(R3);
-    //     rr1.addChild(CommonsKS.rotating(4500,R3,2));
-    //     rr2.addChild(R2);
-    //     rr2.addChild(CommonsKS.rotating(3000,R2,1));
-    //     rr3.addChild(R1);
-    //     rr2.addChild(CommonsKS.rotating(1500,R1,2));
-        
-    //    // R1.addChild(rr1);
-	// 	R2.addChild(rr3);
-	// 	R3.addChild(rr2);
-	// 	R4.addChild(rr1);
 	BoundingSphere b = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), Double.MAX_VALUE);
 		sceneBG.addChild(cir);
 		sceneBG.addChild(R1);
@@ -157,7 +139,6 @@ public class Assignment3KS extends JPanel {
 		sceneBG.addChild(CommonsKS.add_Lights(CommonsKS.White, 1));	
 		sceneBG.addChild(CommonsKS.rotate_Behavior(6000, sceneTG));
 		sceneBG.addChild(CommonsKS.create_BK(CommonsKS.Grey, b));		//creating background
-		// sceneBG.addChild(new the3Lines().position_Object()); // adding origin line                        // make 'sceneTG' continuous rotating
 		
 		return sceneBG;
     }
