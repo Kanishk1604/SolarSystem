@@ -1,4 +1,4 @@
-package codesKS280;
+package solar;
 /* Copyright material for students taking COMP-2800 to work on assignment/labs/projects. */
 
 import java.awt.BorderLayout;
@@ -82,46 +82,47 @@ public class CommonsKS extends JPanel {
 
 
 	/* a function to create a rotation behavior */
-	public static RotationInterpolator rotating(int speed, TransformGroup rotTG, float a) {
+	public static RotationInterpolator rotating(int speed, TransformGroup rotTG) {
 		rotTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		Transform3D zAxis = new Transform3D();
-		AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI/a);	//rotate around z-axis
+		AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI/2);	//rotate around z-axis
 		zAxis.setRotation(axis);
+		zAxis.rotZ(Math.PI/6);
 		//zAxis.setTranslation(new Vector3d(0.46f, 0.68f, 0f));
-		zAxis.setTranslation(new Vector3d(0f, 0.06f, 0f));
+		zAxis.setTranslation(new Vector3d(0f,0.0f, 0.9f));
 		Alpha alpha = new Alpha(-1, speed);		//speed = 5000 ms
 		RotationInterpolator rot_beh = new RotationInterpolator(alpha, rotTG, zAxis, 0.0f, -(float) Math.PI * 2.0f);
 		rot_beh.setSchedulingBounds(hundredBS);
 		return rot_beh;
 	}
 
-
-	public static Background create_BK(Color3f clr,BoundingSphere b){
-		Background bg = new Background();
-		bg.setImage(new TextureLoader("C:\\CompKS2800\\compKS2800\\src\\space.jpg",null).getImage());
-		bg.setImageScaleMode(Background.SCALE_FIT_MAX);
-		bg.setApplicationBounds(b);
-		bg.setColor(clr);
-		return bg;
-	}
-
-
 	public static RotationInterpolator rotate_Behavior(int r_num, TransformGroup rotTG) {
 
 		rotTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		Transform3D yAxis = new Transform3D();
+		AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI/2);	//rotate around z-axis
+		yAxis.setRotation(axis);
+		yAxis.rotZ(Math.PI/6);
 		Alpha rotationAlpha = new Alpha(-1, r_num);
 		RotationInterpolator rot_beh = new RotationInterpolator(
 				rotationAlpha, rotTG, yAxis, 0.0f, (float) Math.PI * 2.0f);
 		rot_beh.setSchedulingBounds(hundredBS);
 		return rot_beh;
 	}
-	
+
+	public static Background create_BK(Color3f clr,BoundingSphere b){
+		Background bg = new Background();
+		bg.setImage(new TextureLoader("C:\\solarsystem\\soalr\\src\\space.jpg",null).getImage());
+		bg.setImageScaleMode(Background.SCALE_FIT_MAX);
+		bg.setApplicationBounds(b);
+		bg.setColor(clr);
+		return bg;
+	}
 
 	/* a function to place one light or two lights at opposite locations */
 	public static BranchGroup add_Lights(Color3f clr, int p_num) {
 		BranchGroup lightBG = new BranchGroup();
-		Point3f atn = new Point3f(0.0f, 0.0f, 0.0f);
+		Point3f atn = new Point3f(0.5f, 0.0f, 0.0f);		
 		PointLight ptLight;
 		float adjt = 1f;
 		for (int i = 0; (i < p_num) && (i < 2); i++) {
@@ -161,7 +162,7 @@ public class CommonsKS extends JPanel {
 		TransformGroup sceneTG = new TransformGroup();
 		sceneTG.addChild(new Box(0.5f, 0.5f, 0.5f, obj_Appearance(Orange) ));
 		sceneBG.addChild(rotate_Behavior(7500, sceneTG));
-		sceneBG.addChild(rotating(6000,sceneTG,2));
+		sceneBG.addChild(rotating(6000,sceneTG));
 		
 		sceneBG.addChild(sceneTG);
 		return sceneBG;
@@ -175,7 +176,7 @@ public class CommonsKS extends JPanel {
 		SimpleUniverse su = new SimpleUniverse(canvas);    // create a SimpleUniverse
 		define_Viewer(su, new Point3d(1.0d, 1.0d, 4.0d));  // set the viewer's location
 		
-		sceneBG.addChild(add_Lights(White, 1));	
+		sceneBG.addChild(add_Lights(Yellow, 1));	
 		sceneBG.addChild(key_Navigation(su));              // allow key navigation
 		sceneBG.compile();		                           // optimize the BranchGroup
 		su.addBranchGraph(sceneBG);                        // attach the scene to SimpleUniverse
