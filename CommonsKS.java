@@ -64,6 +64,7 @@ public class CommonsKS extends JPanel {
 	public final static BoundingSphere hundredBS = new BoundingSphere(new Point3d(), 100.0);
 	public final static BoundingSphere twentyBS = new BoundingSphere(new Point3d(), 20.0);
 
+
     /* A1: function to define object's material and use it to set object's appearance */
 	public static Appearance obj_Appearance(Color3f m_clr) {		
 		Material mtl = new Material();                     // define material's attributes
@@ -80,9 +81,9 @@ public class CommonsKS extends JPanel {
 		return app;
 	}	
 
-
+	//planets rotate
 	/* a function to create a rotation behavior */
-	public static RotationInterpolator rotating(int speed, TransformGroup rotTG) {
+	public static RotationInterpolator rotating(int speed, TransformGroup rotTG,Alpha alpha) {
 		rotTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		Transform3D zAxis = new Transform3D();
 		AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI/2);	//rotate around z-axis
@@ -90,22 +91,23 @@ public class CommonsKS extends JPanel {
 		zAxis.rotZ(Math.PI/6);
 		//zAxis.setTranslation(new Vector3d(0.46f, 0.68f, 0f));
 		zAxis.setTranslation(new Vector3d(0f,0.0f, 0.9f));
-		Alpha alpha = new Alpha(-1, speed);		//speed = 5000 ms
+		// alpha = new Alpha(-1, speed);		//speed = 5000 ms
 		RotationInterpolator rot_beh = new RotationInterpolator(alpha, rotTG, zAxis, 0.0f, -(float) Math.PI * 2.0f);
 		rot_beh.setSchedulingBounds(hundredBS);
 		return rot_beh;
 	}
 
-	public static RotationInterpolator rotate_Behavior(int r_num, TransformGroup rotTG) {
+		//planets revolve
+	public static RotationInterpolator rotate_Behavior(int r_num, TransformGroup rotTG,Alpha alpha) {
 
 		rotTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		Transform3D yAxis = new Transform3D();
-		AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI/2);	//rotate around z-axis
-		yAxis.setRotation(axis);
+		 AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI/2);	//rotate around z-axis
+		 yAxis.setRotation(axis);
 		yAxis.rotZ(Math.PI/6);
-		Alpha rotationAlpha = new Alpha(-1, r_num);
+		// alpha = new Alpha(-1, r_num);		//speed = 5000 ms
 		RotationInterpolator rot_beh = new RotationInterpolator(
-				rotationAlpha, rotTG, yAxis, 0.0f, (float) Math.PI * 2.0f);
+				alpha, rotTG, yAxis, 0.0f, (float) Math.PI * 2.0f);
 		rot_beh.setSchedulingBounds(hundredBS);
 		return rot_beh;
 	}
@@ -161,8 +163,8 @@ public class CommonsKS extends JPanel {
 		BranchGroup sceneBG = new BranchGroup();
 		TransformGroup sceneTG = new TransformGroup();
 		sceneTG.addChild(new Box(0.5f, 0.5f, 0.5f, obj_Appearance(Orange) ));
-		sceneBG.addChild(rotate_Behavior(7500, sceneTG));
-		sceneBG.addChild(rotating(6000,sceneTG));
+		// sceneBG.addChild(rotate_Behavior(7500, sceneTG,rotationAlpha));
+		// sceneBG.addChild(rotating(6000,sceneTG));
 		
 		sceneBG.addChild(sceneTG);
 		return sceneBG;
@@ -187,6 +189,7 @@ public class CommonsKS extends JPanel {
 		frame.setVisible(true);
 	}
 
+	
 	public static void main(String[] args) {
 		frame = new JFrame("KS's Common File");            
 		frame.getContentPane().add(new CommonsKS(create_Scene()));  // create an instance of the class
