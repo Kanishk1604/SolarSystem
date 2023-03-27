@@ -68,7 +68,15 @@ public class Assignment3KS extends JPanel implements KeyListener {
 	private boolean n = true;
 	private boolean p = true;
 	
-	private boolean a = true;
+	private boolean a1 = true;
+	private boolean a2 = true;
+	private boolean a3 = true;
+	private boolean a4 = true;
+	private boolean a5 = true;
+	private boolean a6 = true;
+	private boolean a7 = true;
+	private boolean a8 = true;
+	private boolean a9 = true;
 
 	public static BranchGroup create_Scene() {
         Transform3D scaler = new Transform3D(); // 4x4 matrix for scaling
@@ -84,16 +92,16 @@ public class Assignment3KS extends JPanel implements KeyListener {
 		float x = (float) 0.9;
 
 		
-		sun = new Ring1(CommonsKS.Blue,(float)1,(float)0.0f);           // create the external object		
-		mercury = new Ring1(CommonsKS.White,(float)1,(float)x);           // create the external object		
-		venus = new Ring1(CommonsKS.White,(float)1,(float)2);           // create the external object		
-		earth = new Ring1(CommonsKS.White,(float)1,(float)3);           // create the external object		
-		mars = new Ring1(CommonsKS.White,(float)1,(float)4);           // create the external object		
-		jupiter = new Ring1(CommonsKS.White,(float)0.35,(float)5);           // create the external object		
-		saturn = new export("Saturn",CommonsKS.White,(float)1,(float)0.0,(float)0.0f,(float)6);           // create the external object		
-		uranus = new Ring1(CommonsKS.White,(float)1,(float)7);           // create the external object		
-		neptune = new Ring1(CommonsKS.White,(float)1,(float)8);           // create the external object		
-		pluto = new Ring1(CommonsKS.White,(float)1,(float)9);           // create the external object		
+		sun = new Ring1(CommonsKS.Blue, (float) 1, (float) 0.0f, "sun"); // create the external object
+        mercury = new Ring1(CommonsKS.White, (float) 1, (float) x, "mercury"); // create the external object
+        venus = new Ring1(CommonsKS.White, (float) 1, (float) 2, "venus"); // create the external object
+        earth = new Ring1(CommonsKS.White, (float) 1, (float) 3, "earth"); // create the external object
+        mars = new Ring1(CommonsKS.White, (float) 1, (float) 4, "mars"); // create the external object
+        jupiter = new Ring1(CommonsKS.White, (float) 0.35, (float) 5, "jupiter"); // create the external object
+        saturn = new export("Saturn", CommonsKS.White, (float) 1, (float) 0.0, (float) 0.0f, (float) 6); // create
+        uranus = new Ring1(CommonsKS.White, (float) 1, (float) 7, "uranus"); // create the external object
+        neptune = new Ring1(CommonsKS.White, (float) 1, (float) 8, "neptune"); // create the external object
+        pluto = new Ring1(CommonsKS.White, (float) 1, (float) 9, "pluto"); // create the external object
 		
 		
 		TransformGroup sunTG= new TransformGroup();
@@ -281,6 +289,8 @@ public class Assignment3KS extends JPanel implements KeyListener {
 				//Interaction using keyboard
 	@Override
 	public void keyPressed(KeyEvent e) {
+
+		//For revolution of planets
 		if ((e.getKeyCode() == KeyEvent.VK_Y)){
 			if (y) {
 				alpha1.pause();
@@ -391,17 +401,109 @@ public class Assignment3KS extends JPanel implements KeyListener {
 
 			}
 		}
-		if(e.getKeyCode() == KeyEvent.VK_A){
-			if (a) {
+
+		//for rotation of each planet
+
+		if(e.getKeyCode() == KeyEvent.VK_1){
+			if (a1) {
 				rotalpha1.pause();
-				a = false;
+				a1 = false;
 			}	
 			else{
-				a =true;
+				a1 =true;
 				rotalpha1.resume();
 
 			}
 		}
+		if(e.getKeyCode() == KeyEvent.VK_2){
+			if (a2) {
+				rotalpha2.pause();
+				a2 = false;
+			}	
+			else{
+				a2 =true;
+				rotalpha2.resume();
+
+			}
+		}
+		if(e.getKeyCode() == KeyEvent.VK_3){
+			if (a3) {
+				rotalpha3.pause();
+				a3 = false;
+			}	
+			else{
+				a3 =true;
+				rotalpha3.resume();
+
+			}
+		}
+		if(e.getKeyCode() == KeyEvent.VK_4){
+			if (a4) {
+				rotalpha4.pause();
+				a4 = false;
+			}	
+			else{
+				a4 =true;
+				rotalpha4.resume();
+
+			}
+		}
+		if(e.getKeyCode() == KeyEvent.VK_5){
+			if (a5) {
+				rotalpha5.pause();
+				a5 = false;
+			}	
+			else{
+				a5 =true;
+				rotalpha5.resume();
+
+			}
+		}
+		if(e.getKeyCode() == KeyEvent.VK_6){
+			if (a6) {
+				rotalpha6.pause();
+				a6 = false;
+			}	
+			else{
+				a6 =true;
+				rotalpha6.resume();
+
+			}
+		}
+		if(e.getKeyCode() == KeyEvent.VK_7){
+			if (a7) {
+				rotalpha7.pause();
+				a7 = false;
+			}	
+			else{
+				a7 =true;
+				rotalpha7.resume();
+
+			}
+		}
+		if(e.getKeyCode() == KeyEvent.VK_8){
+			if (a8) {
+				rotalpha8.pause();
+				a8 = false;
+			}	
+			else{
+				a8 =true;
+				rotalpha8.resume();
+
+			}
+		} 
+		if(e.getKeyCode() == KeyEvent.VK_9){
+			if (a9) {
+				rotalpha9.pause();
+				a9 = false;
+			}	
+			else{
+				a9 =true;
+				rotalpha9.resume();
+
+			}
+		}
+
 	}
 		
 	public void keyTyped(KeyEvent e) {}
