@@ -26,28 +26,33 @@ class StringA2 extends RingObjectsKS {
     private TransformGroup objTG;                              // use 'objTG' to position an object
     private String str;
     private float b;
-    public StringA2(String str_ltrs,float a) {
+    private float c;
+    Color3f clr;
+
+    public StringA2(String str_ltrs,float bb,float cc,Color3f cl) {
         str = str_ltrs;		
-        b = a;
+        this.b = bb;
+        this.c = cc;
+        clr = cl;
         Transform3D scaler = new Transform3D();
-        scaler.setScale(0.2);                              // scaling 4x4 matrix 
+        scaler.setScale(0.15);                              // scaling 4x4 matrix 
          Transform3D rot = new Transform3D();
          rot.rotY(Math.PI/2);
         Transform3D tr = new Transform3D();
         tr.mul(scaler);
         tr.mul(rot);
-        tr.setTranslation(new Vector3f(0f,0f,(float) b));
+        tr.setTranslation(new Vector3f(0f,(float) b, (float) c));
         objTG = new TransformGroup(tr);
         objTG.addChild(create_Object());		   // apply scaling to change the string's size
     }
     protected Node create_Object() {
-        Font my2DFont = new Font("Joker", Font.PLAIN, 2);  // font's name, style, size
+        Font my2DFont = new Font("Joker", Font.PLAIN, 1);  // font's name, style, size
         FontExtrusion myExtrude = new FontExtrusion();
         Font3D font3D = new Font3D(my2DFont, myExtrude);		
 
         Point3f pos = new Point3f(-str.length()/4f, -.3f, 4.9f);// position for the string 
         Text3D text3D = new Text3D(font3D, str, pos);      // create a text3D object
-        Appearance app = CommonsKS.obj_Appearance(CommonsKS.Red);
+        Appearance app = CommonsKS.obj_Appearance(clr);
         return new Shape3D(text3D,app);
     }
     public Node position_Object() {
@@ -667,7 +672,7 @@ class Meteor extends RingObjectsKS {
         ObjectFile f = new ObjectFile(ObjectFile.RESIZE, (float) (60 * Math.PI / 180.0));
         Scene s = null;
         try { // load object's definition file to 's'
-            s = f.load(ClassLoader.getSystemResource(obj_name + ".obj"));
+            s = f.load("C:\\solarsystem\\soalr\\image\\"+obj_name + ".obj");
         } catch (FileNotFoundException e) {
             System.err.println(e);
             System.exit(1);
@@ -684,8 +689,8 @@ class Meteor extends RingObjectsKS {
         sh.setAppearance(a);
         sh.setUserData(-1);
         Transform3D r1 = new Transform3D();
-        r1.setTranslation(new Vector3f(1, 0.06f, 1));
-        r1.setScale(10);
+        r1.setTranslation(new Vector3f(1, 2f, 1));
+        r1.setScale(0.01);
         TransformGroup R1 = new TransformGroup(r1);
         R1.addChild(objBG);
         return R1;
