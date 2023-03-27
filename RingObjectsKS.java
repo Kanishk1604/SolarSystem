@@ -112,7 +112,7 @@ class export extends RingObjectsKS {
 		ObjectFile f = new ObjectFile(ObjectFile.RESIZE, (float) (60 * Math.PI / 180.0));
 		Scene s = null;
 		try {                                       // load object's definition file to 's'
-			s = f.load("C:\\solarsystem\\soalr\\src\\solar\\"+obj_name+ ".obj");
+			s = f.load("C:\\solarsystem\\soalr\\image\\"+obj_name+ ".obj");
 		} catch (FileNotFoundException e) {
 			System.err.println(e);
 			System.exit(1);
@@ -140,32 +140,54 @@ class export extends RingObjectsKS {
 	}
 }
 
-//class for smallest ring shape
 class Ring1 extends RingObjectsKS {
-	protected BranchGroup objBG ;                           // load external object to 'objBG'
+    protected BranchGroup objBG; // load external object to 'objBG'
     Color3f clr;
     private float scaling;
     private int num;
     private float d;
-    public Ring1(Color3f c,float scale,float d) {                                  // identify object as "Ring1.obj"
-        clr = c;       
+    String img;
+    Texture t;
+    TransparencyAttributes ta;
+    protected Appearance app;
+
+
+    public Ring1(Color3f c, float scale, float d, String jpg) { // identify object as "Ring1.obj"
+        clr = c;
         scaling = scale;
         this.d = d;
-       // alpha = new Alpha(-1,5000);
+        img = jpg;
+        // alpha = new Alpha(-1,5000);
 
-}
-    
+        // String file = "C:\\solarsystem\\soalr\\image\\" + img + ".jpg";
+        // TextureLoader loader = new TextureLoader(file, null);
+        // ImageComponent2D image = loader.getImage();
+        // if (image == null)
+        //     System.out.println("Cannot load file: " + file);
+        // t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(), image.getHeight());
+        // t.setImage(0, image);
+        // ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
+
+    }
+
     protected Node create_Object() {
         Transform3D r1 = new Transform3D();
-        r1.setTranslation(new Vector3f(0.0f, 0.0f,(float) d));     //0,0.06f,0
-		r1.setScale(scaling);      //0.35
-		TransformGroup R1 =new TransformGroup(r1);
-        R1.addChild(new Sphere(0.12f,Primitive.GENERATE_NORMALS, 30,CommonsKS.obj_Appearance(CommonsKS.Blue)));
-        //R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
+        r1.setTranslation(new Vector3f(0.0f, 0.0f, (float) d)); // 0,0.06f,0
+        r1.setScale(scaling); // 0.35
+        TransformGroup R1 = new TransformGroup(r1);
+
+        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        app.setTexture(t); // setting texture
+        app.setTransparencyAttributes(ta); // sets transparency
+
+        R1.addChild(new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app));
+
+        // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
         return R1;
-	}
+    }
 
     public Node position_Object() {
         return create_Object();
     }
+
 }
