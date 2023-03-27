@@ -25,20 +25,23 @@ public abstract class RingObjectsKS {
 class StringA2 extends RingObjectsKS {
     private TransformGroup objTG;                              // use 'objTG' to position an object
     private String str;
-    public StringA2(String str_ltrs) {
+    private float b;
+    public StringA2(String str_ltrs,float a) {
         str = str_ltrs;		
+        b = a;
         Transform3D scaler = new Transform3D();
         scaler.setScale(0.2);                              // scaling 4x4 matrix 
-        Transform3D rot = new Transform3D();
-        rot.rotY(Math.PI );
+         Transform3D rot = new Transform3D();
+         rot.rotY(Math.PI/2);
         Transform3D tr = new Transform3D();
         tr.mul(scaler);
         tr.mul(rot);
+        tr.setTranslation(new Vector3f(0f,0f,(float) b));
         objTG = new TransformGroup(tr);
         objTG.addChild(create_Object());		   // apply scaling to change the string's size
     }
     protected Node create_Object() {
-        Font my2DFont = new Font("Arial", Font.PLAIN, 1);  // font's name, style, size
+        Font my2DFont = new Font("Joker", Font.PLAIN, 2);  // font's name, style, size
         FontExtrusion myExtrude = new FontExtrusion();
         Font3D font3D = new Font3D(my2DFont, myExtrude);		
 
@@ -139,34 +142,31 @@ class export extends RingObjectsKS {
 		return create_Object();                                // return 'objTG' as object's position
 	}
 }
-
-class Ring1 extends RingObjectsKS {
+class Sun extends RingObjectsKS {
     protected BranchGroup objBG; // load external object to 'objBG'
     Color3f clr;
     private float scaling;
     private int num;
     private float d;
-    String img;
     Texture t;
     TransparencyAttributes ta;
     protected Appearance app;
 
-
-    public Ring1(Color3f c, float scale, float d, String jpg) { // identify object as "Ring1.obj"
+    public Sun(Color3f c, float scale, float d) { // identify object as "Sun.obj"
         clr = c;
         scaling = scale;
         this.d = d;
-        img = jpg;
         // alpha = new Alpha(-1,5000);
 
-        // String file = "C:\\solarsystem\\soalr\\image\\" + img + ".jpg";
-        // TextureLoader loader = new TextureLoader(file, null);
-        // ImageComponent2D image = loader.getImage();
-        // if (image == null)
-        //     System.out.println("Cannot load file: " + file);
-        // t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(), image.getHeight());
-        // t.setImage(0, image);
-        // ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
+        String file = "C:\\solarsystem\\soalr\\image\\\\sun.jpg";
+        TextureLoader loader = new TextureLoader(file, null);
+        ImageComponent2D image = loader.getImage();
+        if (image == null)
+            System.out.println("Cannot load file: " + file);
+        t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(),
+                image.getHeight());
+        t.setImage(0, image);
+        ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
 
     }
 
@@ -180,7 +180,468 @@ class Ring1 extends RingObjectsKS {
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
 
-        R1.addChild(new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app));
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        R1.addChild(s);
+        //s.setUserData(1);
+        // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
+        return R1;
+    }
+
+    public Node position_Object() {
+        return create_Object();
+    }
+
+}
+
+class Mercury extends RingObjectsKS {
+    protected BranchGroup objBG; // load external object to 'objBG'
+    Color3f clr;
+    private float scaling;
+    private int num;
+    private float d;
+    Texture t;
+    TransparencyAttributes ta;
+    protected Appearance app;
+
+    public Mercury(Color3f c, float scale, float d) { // identify object as "Mercury.obj"
+        clr = c;
+        scaling = scale;
+        this.d = d;
+        // alpha = new Alpha(-1,5000);
+
+        String file = "C:\\solarsystem\\soalr\\image\\\\mercury.jpg";
+        TextureLoader loader = new TextureLoader(file, null);
+        ImageComponent2D image = loader.getImage();
+        if (image == null)
+            System.out.println("Cannot load file: " + file);
+        t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(),
+                image.getHeight());
+        t.setImage(0, image);
+        ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
+
+    }
+
+    protected Node create_Object() {
+        Transform3D r1 = new Transform3D();
+        r1.setTranslation(new Vector3f(0.0f, 0.0f, (float) d)); // 0,0.06f,0
+        r1.setScale(scaling); // 0.35
+        TransformGroup R1 = new TransformGroup(r1);
+
+        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        app.setTexture(t); // setting texture
+        app.setTransparencyAttributes(ta); // sets transparency
+
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        R1.addChild(s);
+        s.setUserData(1);
+        // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
+        return R1;
+    }
+
+    public Node position_Object() {
+        return create_Object();
+    }
+
+}
+
+class Venus extends RingObjectsKS {
+    protected BranchGroup objBG; // load external object to 'objBG'
+    Color3f clr;
+    private float scaling;
+    private int num;
+    private float d;
+    Texture t;
+    TransparencyAttributes ta;
+    protected Appearance app;
+
+    public Venus(Color3f c, float scale, float d) { // identify object as "Venus.obj"
+        clr = c;
+        scaling = scale;
+        this.d = d;
+        // alpha = new Alpha(-1,5000);
+
+        String file = "C:\\solarsystem\\soalr\\image\\\\venus.jpg";
+        TextureLoader loader = new TextureLoader(file, null);
+        ImageComponent2D image = loader.getImage();
+        if (image == null)
+            System.out.println("Cannot load file: " + file);
+        t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(),
+                image.getHeight());
+        t.setImage(0, image);
+        ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
+
+    }
+
+    protected Node create_Object() {
+        Transform3D r1 = new Transform3D();
+        r1.setTranslation(new Vector3f(0.0f, 0.0f, (float) d)); // 0,0.06f,0
+        r1.setScale(scaling); // 0.35
+        TransformGroup R1 = new TransformGroup(r1);
+
+        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        app.setTexture(t); // setting texture
+        app.setTransparencyAttributes(ta); // sets transparency
+
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        R1.addChild(s);
+        s.setUserData(2);
+        // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
+        return R1;
+    }
+
+    public Node position_Object() {
+        return create_Object();
+    }
+
+}
+
+class Earth extends RingObjectsKS {
+    protected BranchGroup objBG; // load external object to 'objBG'
+    Color3f clr;
+    private float scaling;
+    private int num;
+    private float d;
+    Texture t;
+    TransparencyAttributes ta;
+    protected Appearance app;
+
+    public Earth(Color3f c, float scale, float d) { // identify object as "Earth.obj"
+        clr = c;
+        scaling = scale;
+        this.d = d;
+        // alpha = new Alpha(-1,5000);
+
+        String file = "C:\\solarsystem\\soalr\\image\\\\earth.jpg";
+        TextureLoader loader = new TextureLoader(file, null);
+        ImageComponent2D image = loader.getImage();
+        if (image == null)
+            System.out.println("Cannot load file: " + file);
+        t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(),
+                image.getHeight());
+        t.setImage(0, image);
+        ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
+
+    }
+
+    protected Node create_Object() {
+        Transform3D r1 = new Transform3D();
+        r1.setTranslation(new Vector3f(0.0f, 0.0f, (float) d)); // 0,0.06f,0
+        r1.setScale(scaling); // 0.35
+        TransformGroup R1 = new TransformGroup(r1);
+
+        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        app.setTexture(t); // setting texture
+        app.setTransparencyAttributes(ta); // sets transparency
+
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        R1.addChild(s);
+        s.setUserData(3);
+        // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
+        return R1;
+    }
+
+    public Node position_Object() {
+        return create_Object();
+    }
+
+}
+
+class Mars extends RingObjectsKS {
+    protected BranchGroup objBG; // load external object to 'objBG'
+    Color3f clr;
+    private float scaling;
+    private int num;
+    private float d;
+    Texture t;
+    TransparencyAttributes ta;
+    protected Appearance app;
+
+    public Mars(Color3f c, float scale, float d) { // identify object as "Mars.obj"
+        clr = c;
+        scaling = scale;
+        this.d = d;
+        // alpha = new Alpha(-1,5000);
+
+        String file = "C:\\solarsystem\\soalr\\image\\\\mars.jpg";
+        TextureLoader loader = new TextureLoader(file, null);
+        ImageComponent2D image = loader.getImage();
+        if (image == null)
+            System.out.println("Cannot load file: " + file);
+        t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(),
+                image.getHeight());
+        t.setImage(0, image);
+        ta = new TransparencyAttributes(TransparencyAttributes.NONE, 1f);
+
+    }
+
+    protected Node create_Object() {
+        Transform3D r1 = new Transform3D();
+        r1.setTranslation(new Vector3f(0.0f, 0.0f, (float) d)); // 0,0.06f,0
+        r1.setScale(scaling); // 0.35
+        TransformGroup R1 = new TransformGroup(r1);
+
+        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        app.setTexture(t); // setting texture
+        app.setTransparencyAttributes(ta); // sets transparency
+
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        R1.addChild(s);
+        s.setUserData(4);
+        // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
+        return R1;
+    }
+
+    public Node position_Object() {
+        return create_Object();
+    }
+
+}
+
+class Jupiter extends RingObjectsKS {
+    protected BranchGroup objBG; // load external object to 'objBG'
+    Color3f clr;
+    private float scaling;
+    private int num;
+    private float d;
+    Texture t;
+    TransparencyAttributes ta;
+    protected Appearance app;
+
+    public Jupiter(Color3f c, float scale, float d) { // identify object as "Jupiter.obj"
+        clr = c;
+        scaling = scale;
+        this.d = d;
+        // alpha = new Alpha(-1,5000);
+
+        String file = "C:\\solarsystem\\soalr\\image\\\\jupiter.jpg";
+        TextureLoader loader = new TextureLoader(file, null);
+        ImageComponent2D image = loader.getImage();
+        if (image == null)
+            System.out.println("Cannot load file: " + file);
+        t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(),
+                image.getHeight());
+        t.setImage(0, image);
+        ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
+
+    }
+
+    protected Node create_Object() {
+        Transform3D r1 = new Transform3D();
+        r1.setTranslation(new Vector3f(0.0f, 0.0f, (float) d)); // 0,0.06f,0
+        r1.setScale(scaling); // 0.35
+        TransformGroup R1 = new TransformGroup(r1);
+
+        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        app.setTexture(t); // setting texture
+        app.setTransparencyAttributes(ta); // sets transparency
+
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        R1.addChild(s);
+        s.setUserData(5);
+        // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
+        return R1;
+    }
+
+    public Node position_Object() {
+        return create_Object();
+    }
+
+}
+
+class Saturn extends RingObjectsKS {
+    protected BranchGroup objBG; // load external object to 'objBG'
+    Color3f clr;
+    private float scaling;
+    private int num;
+    private float d;
+    Texture t;
+    TransparencyAttributes ta;
+    protected Appearance app;
+
+    public Saturn(Color3f c, float scale, float d) { // identify object as "Saturn.obj"
+        clr = c;
+        scaling = scale;
+        this.d = d;
+        // alpha = new Alpha(-1,5000);
+
+        String file = "C:\\solarsystem\\soalr\\image\\\\saturn.jpg";
+        TextureLoader loader = new TextureLoader(file, null);
+        ImageComponent2D image = loader.getImage();
+        if (image == null)
+            System.out.println("Cannot load file: " + file);
+        t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(),
+                image.getHeight());
+        t.setImage(0, image);
+        ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
+
+    }
+
+    protected Node create_Object() {
+        Transform3D r1 = new Transform3D();
+        r1.setTranslation(new Vector3f(0.0f, 0.0f, (float) d)); // 0,0.06f,0
+        r1.setScale(scaling); // 0.35
+        TransformGroup R1 = new TransformGroup(r1);
+
+        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        app.setTexture(t); // setting texture
+        app.setTransparencyAttributes(ta); // sets transparency
+
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        R1.addChild(s);
+        s.setUserData(6);
+        // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
+        return R1;
+    }
+
+    public Node position_Object() {
+        return create_Object();
+    }
+
+}
+
+class Uranus extends RingObjectsKS {
+    protected BranchGroup objBG; // load external object to 'objBG'
+    Color3f clr;
+    private float scaling;
+    private int num;
+    private float d;
+    Texture t;
+    TransparencyAttributes ta;
+    protected Appearance app;
+
+    public Uranus(Color3f c, float scale, float d) { // identify object as "Uranus.obj"
+        clr = c;
+        scaling = scale;
+        this.d = d;
+        // alpha = new Alpha(-1,5000);
+
+        String file = "C:\\solarsystem\\soalr\\image\\\\sun.jpg";
+        TextureLoader loader = new TextureLoader(file, null);
+        ImageComponent2D image = loader.getImage();
+        if (image == null)
+            System.out.println("Cannot load file: " + file);
+        t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(),
+                image.getHeight());
+        t.setImage(0, image);
+        ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
+
+    }
+
+    protected Node create_Object() {
+        Transform3D r1 = new Transform3D();
+        r1.setTranslation(new Vector3f(0.0f, 0.0f, (float) d)); // 0,0.06f,0
+        r1.setScale(scaling); // 0.35
+        TransformGroup R1 = new TransformGroup(r1);
+
+        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        app.setTexture(t); // setting texture
+        app.setTransparencyAttributes(ta); // sets transparency
+
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        R1.addChild(s);
+        s.setUserData(7);
+        // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
+        return R1;
+    }
+
+    public Node position_Object() {
+        return create_Object();
+    }
+
+}
+
+class Neptune extends RingObjectsKS {
+    protected BranchGroup objBG; // load external object to 'objBG'
+    Color3f clr;
+    private float scaling;
+    private int num;
+    private float d;
+    Texture t;
+    TransparencyAttributes ta;
+    protected Appearance app;
+
+    public Neptune(Color3f c, float scale, float d) { // identify object as "Neptune.obj"
+        clr = c;
+        scaling = scale;
+        this.d = d;
+        // alpha = new Alpha(-1,5000);
+
+        String file = "C:\\solarsystem\\soalr\\image\\\\neptune.jpg";
+        TextureLoader loader = new TextureLoader(file, null);
+        ImageComponent2D image = loader.getImage();
+        if (image == null)
+            System.out.println("Cannot load file: " + file);
+        t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(),
+                image.getHeight());
+        t.setImage(0, image);
+        ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
+
+    }
+
+    protected Node create_Object() {
+        Transform3D r1 = new Transform3D();
+        r1.setTranslation(new Vector3f(0.0f, 0.0f, (float) d)); // 0,0.06f,0
+        r1.setScale(scaling); // 0.35
+        TransformGroup R1 = new TransformGroup(r1);
+
+        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        app.setTexture(t); // setting texture
+        app.setTransparencyAttributes(ta); // sets transparency
+
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        R1.addChild(s);
+        s.setUserData(8);
+        // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
+        return R1;
+    }
+
+    public Node position_Object() {
+        return create_Object();
+    }
+
+}
+
+class Pluto extends RingObjectsKS {
+    protected BranchGroup objBG; // load external object to 'objBG'
+    Color3f clr;
+    private float scaling;
+    private int num;
+    private float d;
+    Texture t;
+    TransparencyAttributes ta;
+    protected Appearance app;
+
+    public Pluto(Color3f c, float scale, float d) { // identify object as "Pluto.obj"
+        clr = c;
+        scaling = scale;
+        this.d = d;
+        // alpha = new Alpha(-1,5000);
+
+        String file = "C:\\solarsystem\\soalr\\image\\sun.jpg";
+        TextureLoader loader = new TextureLoader(file, null);
+        ImageComponent2D image = loader.getImage();
+        if (image == null)
+            System.out.println("Cannot load file: " + file);
+        t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(),
+                image.getHeight());
+        t.setImage(0, image);
+        ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
+
+    }
+
+    protected Node create_Object() {
+        Transform3D r1 = new Transform3D();
+        r1.setTranslation(new Vector3f(0.0f, 0.0f, (float) d)); // 0,0.06f,0
+        r1.setScale(scaling); // 0.35
+        TransformGroup R1 = new TransformGroup(r1);
+
+        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        app.setTexture(t); // setting texture
+        app.setTransparencyAttributes(ta); // sets transparency
+
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        R1.addChild(s);
+        s.setUserData(9);
 
         // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
         return R1;
@@ -190,4 +651,48 @@ class Ring1 extends RingObjectsKS {
         return create_Object();
     }
 
+}
+
+class Meteor extends RingObjectsKS {
+    protected BranchGroup objBG; // load external object to 'objBG'
+    private String obj_name;
+    Color3f clr;
+
+    public Meteor(String obj, Color3f c) { // identify object as "Ring1.obj"
+        obj_name = obj;
+        clr = c;
+    }
+
+    protected Node create_Object() {
+        ObjectFile f = new ObjectFile(ObjectFile.RESIZE, (float) (60 * Math.PI / 180.0));
+        Scene s = null;
+        try { // load object's definition file to 's'
+            s = f.load(ClassLoader.getSystemResource(obj_name + ".obj"));
+        } catch (FileNotFoundException e) {
+            System.err.println(e);
+            System.exit(1);
+        } catch (ParsingErrorException e) {
+            System.err.println(e);
+            System.exit(1);
+        } catch (IncorrectFormatException e) {
+            System.err.println(e);
+            System.exit(1);
+        }
+        objBG = s.getSceneGroup();
+        Appearance a = CommonsKS.obj_Appearance(clr); // adding the appearance
+        Shape3D sh = (Shape3D) objBG.getChild(0);
+        sh.setAppearance(a);
+        sh.setUserData(-1);
+        Transform3D r1 = new Transform3D();
+        r1.setTranslation(new Vector3f(1, 0.06f, 1));
+        r1.setScale(10);
+        TransformGroup R1 = new TransformGroup(r1);
+        R1.addChild(objBG);
+        return R1;
+    }
+
+    /* a function to attach the current object to 'objTG' and return 'objTG' */
+    public Node position_Object() {
+        return create_Object(); // return 'objTG' as object's position
+    }
 }
