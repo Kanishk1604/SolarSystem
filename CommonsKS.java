@@ -86,8 +86,8 @@ public class CommonsKS extends JPanel {
 	public static RotationInterpolator rotating(int speed, TransformGroup rotTG,Alpha alpha,float a) {
 		rotTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		Transform3D zAxis = new Transform3D();
-		AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI/2);	//rotate around z-axis
-		zAxis.setRotation(axis);
+		// AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI);	//rotate around z-axis
+		// zAxis.setRotation(axis);
 		zAxis.rotZ(Math.PI/6);
 		//zAxis.setTranslation(new Vector3d(0.46f, 0.68f, 0f));
 		zAxis.setTranslation(new Vector3d(0f,0.0f, a));
