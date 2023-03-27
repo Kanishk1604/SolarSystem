@@ -83,14 +83,14 @@ public class CommonsKS extends JPanel {
 
 	//planets rotate
 	/* a function to create a rotation behavior */
-	public static RotationInterpolator rotating(int speed, TransformGroup rotTG,Alpha alpha) {
+	public static RotationInterpolator rotating(int speed, TransformGroup rotTG,Alpha alpha,float a) {
 		rotTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		Transform3D zAxis = new Transform3D();
 		AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI/2);	//rotate around z-axis
 		zAxis.setRotation(axis);
 		zAxis.rotZ(Math.PI/6);
 		//zAxis.setTranslation(new Vector3d(0.46f, 0.68f, 0f));
-		zAxis.setTranslation(new Vector3d(0f,0.0f, 0.9f));
+		zAxis.setTranslation(new Vector3d(0f,0.0f, a));
 		// alpha = new Alpha(-1, speed);		//speed = 5000 ms
 		RotationInterpolator rot_beh = new RotationInterpolator(alpha, rotTG, zAxis, 0.0f, -(float) Math.PI * 2.0f);
 		rot_beh.setSchedulingBounds(hundredBS);
@@ -102,7 +102,7 @@ public class CommonsKS extends JPanel {
 
 		rotTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		Transform3D yAxis = new Transform3D();
-		 AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI/2);	//rotate around z-axis
+		AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI/2);	//rotate around z-axis
 		 yAxis.setRotation(axis);
 		yAxis.rotZ(Math.PI/6);
 		// alpha = new Alpha(-1, r_num);		//speed = 5000 ms
@@ -114,7 +114,7 @@ public class CommonsKS extends JPanel {
 
 	public static Background create_BK(Color3f clr,BoundingSphere b){
 		Background bg = new Background();
-		bg.setImage(new TextureLoader("C:\\solarsystem\\soalr\\src\\space.jpg",null).getImage());
+		bg.setImage(new TextureLoader("C:\\solarsystem\\soalr\\image\\space.jpg",null).getImage());
 		bg.setImageScaleMode(Background.SCALE_FIT_MAX);
 		bg.setApplicationBounds(b);
 		bg.setColor(clr);
