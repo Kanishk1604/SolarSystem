@@ -105,17 +105,17 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 
 		float x = (float) 0.9;
 
-		Object3D[0] = new StringA2("Mercury",1);
-		Object3D[1] = new StringA2("Venus",2);
-		Object3D[2] = new StringA2("Earth",2);
-		Object3D[3] = new StringA2("Mars",2);
-		Object3D[4] = new StringA2("Jupiter",2);
-		Object3D[5] = new StringA2("Saturn",2);
-		Object3D[6] = new StringA2("Uranus",2);
-		Object3D[7] = new StringA2("Neptune",2);
-		Object3D[8] = new StringA2("Pluto",2);
+		Object3D[0] = new StringA2("Mercury",(float)0.3,(float)1,CommonsKS.Red);
+		Object3D[1] = new StringA2("Venus",(float) 0.6,(float)1.8,CommonsKS.Blue);
+		Object3D[2] = new StringA2("Earth",(float)0.9,(float)2.6,CommonsKS.Green);
+		Object3D[3] = new StringA2("Mars",(float)1.2,(float)3.4,CommonsKS.Yellow);
+		Object3D[4] = new StringA2("Jupiter",(float)1.5,(float)4.2,CommonsKS.Magenta);
+		Object3D[5] = new StringA2("Saturn",(float)1.8,(float)5.2,CommonsKS.Cyan);
+		Object3D[6] = new StringA2("Uranus",(float)2.1,(float)6.2,CommonsKS.Grey);
+		Object3D[7] = new StringA2("Neptune",(float)2.4,(float)7.2,CommonsKS.Orange);
+		Object3D[8] = new StringA2("Pluto",(float)2.7,(float)8.6,CommonsKS.Red);
 
-		sun = new Sun(CommonsKS.Blue, (float) 4, (float) 0.0f); // create the external object
+		sun = new Sun(CommonsKS.Blue, (float) 3, (float) 0.0f); // create the external object
         mercury = new Mercury(CommonsKS.White, (float) 1, (float) x); // create the external object
         venus = new Venus(CommonsKS.White, (float) 1.8, (float) 2); // create the external object
         earth = new Earth(CommonsKS.White, (float) 1.9, (float) 3); // create the external object
@@ -126,7 +126,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         neptune = new Neptune(CommonsKS.White, (float) 2.3, (float) 8); // create the external object
         pluto = new Pluto(CommonsKS.White, (float) 0.7, (float) 9); // create the external object
 
-        meteor = new Meteor("meteor1", CommonsKS.White);
+        meteor = new Meteor("meteor1", CommonsKS.Grey);
 		
 		TransformGroup sunTG= new TransformGroup();
 
@@ -160,6 +160,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		TransformGroup plutoTG2 = new TransformGroup();
 		
 		TransformGroup str = new TransformGroup();
+		TransformGroup met = new TransformGroup();
 
 
 		alpha1 =new Alpha(-1,5000);
@@ -290,12 +291,16 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		str.addChild(Object3D[6].position_Object());
 		str.addChild(Object3D[7].position_Object());
 		str.addChild(Object3D[8].position_Object());
+
+		//meteors
+		met.addChild(meteor.position_Object());
 	
 	BoundingSphere b = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), Double.MAX_VALUE);
 		sceneBG.addChild(cir);
 		sceneBG.addChild(R1);
 		sceneBG.addChild(sceneTG);
 		sceneBG.addChild(str);
+		sceneBG.addChild(met);
 		sceneBG.addChild(CommonsKS.add_Lights(CommonsKS.White, 1));	
 		// sceneBG.addChild(CommonsKS.rotate_Behavior(6000, sceneTG,alpha));
 		sceneBG.addChild(CommonsKS.create_BK(CommonsKS.Grey, b));		//creating background
@@ -582,7 +587,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		if (pickTool.pickClosest() != null) {
 			PickResult pickResult = pickTool.pickClosest();// obtain the closest hit
 			sphere = (Sphere)pickResult.getNode(PickResult.PRIMITIVE);
-			Appearance app = new Appearance();             // originally a PRIMITIVE as a box
+			
 			if ((int) sphere.getUserData() == 1) {            // retrieve 'UserData'
 				alpha1.resume();
 				//alpha2.resume();
