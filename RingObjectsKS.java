@@ -12,9 +12,14 @@ import org.jogamp.java3d.loaders.ParsingErrorException;
 import org.jogamp.java3d.loaders.Scene;
 import org.jogamp.java3d.loaders.objectfile.ObjectFile;
 
+
 public abstract class RingObjectsKS {
+	protected Alpha rotationAlpha;                           // NOTE: keep for future use
     protected abstract Node create_Object();	           // use 'Node' for both Group and Shape3D
     public abstract Node position_Object();
+    public Alpha get_Alpha() { return alpha; };    // NOTE: keep for future use 
+	protected static Alpha alpha;
+
 }
 
 class StringA2 extends RingObjectsKS {
@@ -140,12 +145,13 @@ class Ring1 extends RingObjectsKS {
 	protected BranchGroup objBG ;                           // load external object to 'objBG'
     Color3f clr;
     private float scaling;
-
+    private int num;
     private float d;
     public Ring1(Color3f c,float scale,float d) {                                  // identify object as "Ring1.obj"
         clr = c;       
         scaling = scale;
         this.d = d;
+       // alpha = new Alpha(-1,5000);
 
 }
     
@@ -155,7 +161,7 @@ class Ring1 extends RingObjectsKS {
 		r1.setScale(scaling);      //0.35
 		TransformGroup R1 =new TransformGroup(r1);
         R1.addChild(new Sphere(0.12f,Primitive.GENERATE_NORMALS, 30,CommonsKS.obj_Appearance(CommonsKS.Blue)));
-        R1.addChild(objBG);
+        //R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
         return R1;
 	}
 
