@@ -3,32 +3,20 @@ package solar;
 
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
+import java.io.FileNotFoundException;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.text.AttributeSet.ColorAttribute;
 import org.jogamp.java3d.*;
+import org.jogamp.java3d.loaders.IncorrectFormatException;
+import org.jogamp.java3d.loaders.ParsingErrorException;
+
+import org.jogamp.java3d.loaders.Scene;
+import org.jogamp.java3d.loaders.objectfile.ObjectFile;
 import org.jogamp.java3d.utils.geometry.*;
 import org.jogamp.java3d.utils.image.TextureLoader;
 import org.jogamp.vecmath.*;
-import org.jogamp.java3d.Alpha;
-import org.jogamp.java3d.Appearance;
-import org.jogamp.java3d.Background;
-import org.jogamp.java3d.BoundingSphere;
-import org.jogamp.java3d.BranchGroup;
-import org.jogamp.java3d.Canvas3D;
-import org.jogamp.java3d.ColoringAttributes;
-import org.jogamp.java3d.GeometryArray;
-import org.jogamp.java3d.ImageComponent2D;
-import org.jogamp.java3d.IndexedLineArray;
-import org.jogamp.java3d.Material;
-import org.jogamp.java3d.PointLight;
-import org.jogamp.java3d.PolygonAttributes;
-import org.jogamp.java3d.RotationInterpolator;
-import org.jogamp.java3d.Shape3D;
-import org.jogamp.java3d.Texture2D;
-import org.jogamp.java3d.TextureAttributes;
-import org.jogamp.java3d.Transform3D;
-import org.jogamp.java3d.TransformGroup;
 import org.jogamp.java3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import org.jogamp.java3d.utils.geometry.Box;
 import org.jogamp.java3d.utils.image.TextureLoader;
@@ -189,10 +177,50 @@ public class CommonsKS extends JPanel {
 		frame.setVisible(true);
 	}
 
-	
+	public static BranchGroup loadShape(String name, float x, float y, float z, float scale) {
+		int flags = ObjectFile.RESIZE | ObjectFile.TRIANGULATE | ObjectFile.STRIPIFY;
+		ObjectFile f = new ObjectFile(flags, (float) (60 * Math.PI /180.0));
+		Scene s = null;
+		try {
+			s = f.load("C:\\solarsystem\\soalr\\image\\"+name + ".obj");
+		} catch (FileNotFoundException e) {			//exception
+			System.err.println(e);
+			System.exit(1);
+		} catch (ParsingErrorException e) {
+			System.err.println(e);
+			System.exit(1);
+		} catch (IncorrectFormatException e) {
+			System.err.println(e);
+			System.exit(1);
+		}
+		s.getSceneGroup();
+		BranchGroup objBG = s.getSceneGroup();
+		Transform3D translation = new Transform3D();           
+		translation.setTranslation(new Vector3f(x, y, z));		//vector for translation
+		Shape3D sh = (Shape3D) objBG.getChild(0);
+		CollisionDetectShapes cd = new CollisionDetectShapes(sh);
+		cd.setSchedulingBounds(CommonsKS.twentyBS);        // detect column's collision
+		Transform3D scaler = new Transform3D();
+		scaler.setScale(scale);			//vector for scaling
+
+		Transform3D trfm = new Transform3D();           
+		trfm.mul(translation); 							// apply translation
+		trfm.mul(scaler);                              // apply scaler
+		                              
+		TransformGroup objTG = new TransformGroup(trfm);
+		objTG.addChild(objBG);
+		objTG.addChild(cd);
+		BranchGroup objBG1 = new BranchGroup();
+		objBG1.addChild(objTG);
+		return objBG1;
+	}
 	public static void main(String[] args) {
 		frame = new JFrame("KS's Common File");            
 		frame.getContentPane().add(new CommonsKS(create_Scene()));  // create an instance of the class
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+	public static Node loadShape(String string, int i, float f, int j, int k) {
+		return null;
 	}
 }
