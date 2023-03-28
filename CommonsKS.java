@@ -198,18 +198,18 @@ public class CommonsKS extends JPanel {
 		Transform3D translation = new Transform3D();           
 		translation.setTranslation(new Vector3f(x, y, z));		//vector for translation
 		Shape3D sh = (Shape3D) objBG.getChild(0);
-		CollisionDetectShapes cd = new CollisionDetectShapes(sh);
-		cd.setSchedulingBounds(CommonsKS.twentyBS);        // detect column's collision
+		// CollisionDetectShapes cd = new CollisionDetectShapes(sh,);
+		// cd.setSchedulingBounds(CommonsKS.twentyBS);        // detect column's collision
 		Transform3D scaler = new Transform3D();
 		scaler.setScale(scale);			//vector for scaling
-
+		// sh.setUserData(1);
 		Transform3D trfm = new Transform3D();           
 		trfm.mul(translation); 							// apply translation
 		trfm.mul(scaler);                              // apply scaler
 		                              
 		TransformGroup objTG = new TransformGroup(trfm);
 		objTG.addChild(objBG);
-		objTG.addChild(cd);
+		// objTG.addChild(cd);
 		BranchGroup objBG1 = new BranchGroup();
 		objBG1.addChild(objTG);
 		return objBG1;
@@ -220,7 +220,5 @@ public class CommonsKS extends JPanel {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	public static Node loadShape(String string, int i, float f, int j, int k) {
-		return null;
-	}
+	
 }
