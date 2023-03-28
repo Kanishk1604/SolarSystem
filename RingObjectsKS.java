@@ -19,6 +19,7 @@ public abstract class RingObjectsKS {
     public abstract Node position_Object();
     public Alpha get_Alpha() { return alpha; };    // NOTE: keep for future use 
 	protected static Alpha alpha;
+    // public static Transform3D trfm;
 
 }
 
@@ -271,7 +272,7 @@ class Venus extends RingObjectsKS {
     private float d;
     Texture t;
     TransparencyAttributes ta;
-    protected Appearance app;
+    protected Appearance app = new Appearance();
 
     public Venus(Color3f c, float scale, float d) { // identify object as "Venus.obj"
         clr = c;
@@ -297,7 +298,7 @@ class Venus extends RingObjectsKS {
         r1.setScale(scaling); // 0.35
         TransformGroup R1 = new TransformGroup(r1);
 
-        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        // app = CommonsKS.obj_Appearance(CommonsKS.White);
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
 
@@ -322,7 +323,7 @@ class Earth extends RingObjectsKS {
     private float d;
     Texture t;
     TransparencyAttributes ta;
-    protected Appearance app;
+    protected Appearance app = new Appearance();
 
     public Earth(Color3f c, float scale, float d) { // identify object as "Earth.obj"
         clr = c;
@@ -348,10 +349,9 @@ class Earth extends RingObjectsKS {
         r1.setScale(scaling); // 0.35
         TransformGroup R1 = new TransformGroup(r1);
 
-        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        // app = CommonsKS.obj_Appearance(CommonsKS.White);
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
-
         Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
         R1.addChild(s);
         s.setUserData(3);
@@ -722,4 +722,61 @@ class Meteor extends RingObjectsKS {
     public Node position_Object() {
         return create_Object(); // return 'objTG' as object's position
     }
+}
+
+class rocket extends RingObjectsKS	{
+	private TransformGroup objSH1 = new TransformGroup();
+	private TransformGroup objSH2 = new TransformGroup();
+	private TransformGroup objSH3 = new TransformGroup();
+	private TransformGroup objSH4 = new TransformGroup();
+	private TransformGroup objSH5 = new TransformGroup();
+	private TransformGroup objSH6 = new TransformGroup();
+	private TransformGroup objTG = new TransformGroup();
+	private TransformGroup objTG1 = new TransformGroup();
+	private void createContent() {
+		TransformGroup baseTG = new TransformGroup();
+		baseTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		baseTG.addChild(objTG);
+		Alpha alpha = new Alpha(-1, Alpha.INCREASING_ENABLE|Alpha.DECREASING_ENABLE, 0, 0, 0, 2000, 1000, 4000, 2000, 1000);
+		Transform3D axisPosition = new Transform3D();
+		//axisPosition.rotZ(Math.PI / 2.0);
+		PositionInterpolator positionInterpol = new PositionInterpolator(alpha, baseTG, axisPosition,-10f, 10f);
+		positionInterpol.setSchedulingBounds(CommonsKS.hundredBS);
+		objTG1.addChild(baseTG);
+		objTG1.addChild(positionInterpol);
+		}
+	public rocket()	{
+		Transform3D translation = new Transform3D();           
+		translation.setTranslation(new Vector3f(0f, 0f, 1f));		//vector for translation
+
+		Transform3D scaler = new Transform3D();
+		scaler.setScale(1);			//vector for scaling
+
+        Transform3D trfm = new Transform3D(); 
+		trfm.mul(translation); 							// apply translation
+		trfm.mul(scaler);                              // apply scaler
+		// trfm.rotZ(20);                               
+		objTG = new TransformGroup(trfm);			//apply for objTG
+		objSH1.addChild(CommonsKS.loadShape("spaceshuttletail", 1,0f,0,3));
+		objSH2.addChild(CommonsKS.loadShape("spaceshuttlefront", -1,0,0,3));
+		objSH3.addChild(CommonsKS.loadShape("spaceshuttlerear", 0,0,0.2f,3));
+		objSH4.addChild(CommonsKS.loadShape("spaceshuttlesection1", -0.95f, 	0.45f,	-0.3f,	3));
+		objSH5.addChild(CommonsKS.loadShape("spaceshuttlesection2", -0.95f, 	-0.05f,		-0.45f	,	3));
+		objSH6.addChild(CommonsKS.loadShape("spaceshuttlesection3", -0.9f, 	-0.2f,	-0f,	3));
+		
+		objTG.addChild(objSH1);
+		objTG.addChild(objSH2);
+		objTG.addChild(objSH3);
+		objTG.addChild(objSH4);
+		objTG.addChild(objSH5);
+		objTG.addChild(objSH6);
+		
+		createContent();
+	}
+	protected Node create_Object()	{                            // attach "FanSwitch" to 'objTG'
+		return objTG1;                                      // use 'objTG' to attach "FanSwitch" to the previous TG
+	}
+	public Node position_Object() {
+		return objTG1;
+	}
 }
