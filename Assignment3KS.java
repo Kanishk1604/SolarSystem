@@ -64,7 +64,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	private static RingObjectsKS pluto;
 	
 
-	private static RingObjectsKS[] Object3D = new RingObjectsKS[27];
+	private static RingObjectsKS[] Object3D = new RingObjectsKS[28];
 
 	private static boolean y = true;
 	private static boolean v = true;
@@ -87,11 +87,29 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	private static boolean a9 = true;
 
 	public static int s1 = -1;
+	public static int s2 = -2;
+	public static int s3 = -3;
+	public static int s4 = -4;
+	public static int s5 = -5;
+	public static int s6 = -6;
+	public static int s7 = -7;
+	public static int s8 = -8;
+	public static int s9 = -9;
+	public static int s10 = -10;
+	public static int s11= -11;
+	public static int s12= -12;
+	public static int s13= -13;
+	public static int s14= -14;
+	public static int s15= -15;
+	public static int s16 = -16;
+	public static int s17 = -17;
+	public static int s18 = -18;
 
     private static PickTool pickTool;
     private Canvas3D canvas;
 	private static TransformGroup R1;
-
+	public static Transform3D trfm = new Transform3D();
+	// public static TransformGroup rocket  = new TransformGroup();
 	private static Sphere mtr;
 	public static Alpha get_Alpha() { return alpha1; };    // NOTE: keep for future use 
 
@@ -130,38 +148,41 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         pluto = new Pluto(CommonsKS.White, (float) 0.7, (float) 9); // create the external object
 
         Object3D[9] = new Meteor("meteor1", s1,CommonsKS.Grey,0f,0.26f,0.9f);
-        Object3D[10] = new Meteor("meteor2", -2,CommonsKS.Grey,0f,0.26f,1.1f);
+        Object3D[10] = new Meteor("meteor2", s2,CommonsKS.Grey,0f,0.26f,1.1f);
 
-        Object3D[11] = new Meteor("meteor3",-3, CommonsKS.Grey,0f,0.56f,1.7f);
-        Object3D[12] = new Meteor("meteor4",-4, CommonsKS.Grey,0f,0.56f,1.9f);
+        Object3D[11] = new Meteor("meteor3",s3, CommonsKS.Grey,0f,0.56f,1.7f);
+        Object3D[12] = new Meteor("meteor4",s4, CommonsKS.Grey,0f,0.56f,1.9f);
         
-		Object3D[13] = new Meteor("meteor5",-5, CommonsKS.Grey,0f,0.86f,2.5f);
-        Object3D[14] = new Meteor("meteor6",-6, CommonsKS.Grey,0f,0.86f,2.7f);
+		Object3D[13] = new Meteor("meteor5",s5, CommonsKS.Grey,0f,0.86f,2.5f);
+        Object3D[14] = new Meteor("meteor6",s6, CommonsKS.Grey,0f,0.86f,2.7f);
 
-        Object3D[15] = new Meteor("meteor7",-7, CommonsKS.Grey,0f,1.16f,3.5f);
-        Object3D[16] = new Meteor("meteor8",-8 ,CommonsKS.Grey,0f,1.16f,3.7f);
+        Object3D[15] = new Meteor("meteor7",s7, CommonsKS.Grey,0f,1.16f,3.5f);
+        Object3D[16] = new Meteor("meteor8",s8 ,CommonsKS.Grey,0f,1.16f,3.7f);
 
-        Object3D[17] = new Meteor("meteor9",-9, CommonsKS.Grey,0f,1.46f,4.3f);
-        Object3D[18] = new Meteor("meteor10",-10 ,CommonsKS.Grey,0f,1.46f,4.5f);
+        Object3D[17] = new Meteor("meteor9",s9, CommonsKS.Grey,0f,1.46f,4.3f);
+        Object3D[18] = new Meteor("meteor10",s10 ,CommonsKS.Grey,0f,1.46f,4.5f);
 		
-        Object3D[19] = new Meteor("meteor11",-11, CommonsKS.Grey,0f,1.76f,5.3f);
-        Object3D[20] = new Meteor("meteor12",-12, CommonsKS.Grey,0f,1.76f,5.5f);
+        Object3D[19] = new Meteor("meteor11",s11, CommonsKS.Grey,0f,1.76f,5.3f);
+        Object3D[20] = new Meteor("meteor12",s12, CommonsKS.Grey,0f,1.76f,5.5f);
 		
-        Object3D[21] = new Meteor("meteor11",-13, CommonsKS.Grey,0f,2.06f,6.3f);
-        Object3D[22] = new Meteor("meteor12",-14, CommonsKS.Grey,0f,2.06f,6.5f);
+        Object3D[21] = new Meteor("meteor11",s13, CommonsKS.Grey,0f,2.06f,6.3f);
+        Object3D[22] = new Meteor("meteor12",s14, CommonsKS.Grey,0f,2.06f,6.5f);
 
-        Object3D[23] = new Meteor("meteor11",-15, CommonsKS.Grey,0f,2.36f,7.3f);
-        Object3D[24] = new Meteor("meteor12",-16, CommonsKS.Grey,0f,2.36f,7.5f);		
+        Object3D[23] = new Meteor("meteor11",s15, CommonsKS.Grey,0f,2.36f,7.3f);
+        Object3D[24] = new Meteor("meteor12",s16, CommonsKS.Grey,0f,2.36f,7.5f);		
 
-        Object3D[25] = new Meteor("meteor11",-17, CommonsKS.Grey,0f,2.66f,8.7f);
-        Object3D[26] = new Meteor("meteor12",-18, CommonsKS.Grey,0f,2.66f,8.9f);	
+        Object3D[25] = new Meteor("meteor11",s17, CommonsKS.Grey,0f,2.66f,8.7f);
+        Object3D[26] = new Meteor("meteor12",s18, CommonsKS.Grey,0f,2.66f,8.9f);	
+		
+		Object3D[27] = new rocket();
 		TransformGroup met = new TransformGroup();
-		
+
 		 //meteors
-		for(int i=9;i<27;i++) {
+		for(int i=9;i<28;i++) {
 			met.addChild(Object3D[i].position_Object());
 		}
-	
+		
+		
 		TransformGroup sunTG= new TransformGroup();
 
 		TransformGroup mercuryTG = new TransformGroup();
@@ -373,6 +394,13 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 
+
+		// if((e.getKeyCode() == KeyEvent.VK_R)){
+		// 	Transform3D uu = new Transform3D();
+		// 	uu.rotZ(Math.PI/2);
+		// 	trfm.mul(uu);
+			
+		// }
 		//For revolution of planets
 		if ((e.getKeyCode() == KeyEvent.VK_Y)){
 			if (y) {
@@ -393,73 +421,85 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 				alpha2.pause();
 				v = false;
 				// sphere.setUserData(2);
-
+				s3 = -3;
+				mtr.setUserData(s3); 
 				}
 			else {
 				v = true;
 				alpha2.resume();
 				// sphere.setUserData(-2);
-
+				s3 = 3;
+				mtr.setUserData(s3);
 			}
 		}
 		if ((e.getKeyCode() == KeyEvent.VK_E)){
 			if (er) {
 				alpha3.pause();
 				er = false;
-
+				s5 = -5;
+				mtr.setUserData(s5);
 				}
 			else {
 				er = true;
 				alpha3.resume();
-
+				s5 = 5;
+				mtr.setUserData(s5);
 			}
 		}
 		if ((e.getKeyCode() == KeyEvent.VK_M)){
 			if (m) {
 				alpha4.pause();
 				m = false;
-
+				s7 = -7;
+				mtr.setUserData(s7);
 				}
 			else {
 				m = true;
 				alpha4.resume();
-
+				s7 = 7;
+				mtr.setUserData(s7);
 			}
 		}
 		if ((e.getKeyCode() == KeyEvent.VK_J)){
 			if (j) {
 				alpha5.pause();
 				m = false;
-
+				s9 = -9;
+				mtr.setUserData(s9);
 				}
 			else {
 				j = true;
 				alpha5.resume();
-
+				s9 = 9;
+				mtr.setUserData(s9);
 			}
 		}
 		if ((e.getKeyCode() == KeyEvent.VK_S)){
 			if (s) {
 				alpha6.pause();
 				s = false;
-
+				s11 = -11;
+				mtr.setUserData(s11);
 				}
 			else {
 				s = true;
 				alpha6.resume();
-
+				s11 = 11;
+				mtr.setUserData(s11);
 			}
 		}
 		if ((e.getKeyCode() == KeyEvent.VK_U)){
 			if (u) {
 				alpha7.pause();
 				u = false;
-
+				s13 = -13;
+				mtr.setUserData(s13);
 				}
 			else {
 				u = true;
 				alpha7.resume();
-
+				s13 = 13;
+				mtr.setUserData(s13);
 			}
 		}
 
@@ -468,24 +508,28 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if (n) {
 				alpha8.pause();
 				n = false;
-
+				s15 = -15;
+				mtr.setUserData(s15);
 				}
 			else {
 				n = true;
 				alpha8.resume();
-
+				s15 = 15;
+				mtr.setUserData(s15);
 			}
 		}
 		if ((e.getKeyCode() == KeyEvent.VK_P)){
 			if (p) {
 				alpha9.pause();
 				p = false;
-
+				s17 = -17;
+				mtr.setUserData(s17);
 				}
 			else {
 				p = true;
 				alpha9.resume();
-
+				s17 = 17;
+				mtr.setUserData(s17);
 			}
 		}
 
@@ -495,11 +539,14 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if (a1) {
 				rotalpha1.pause();
 				a1 = false;
+				s2 = 2;
+				mtr.setUserData(s2);
 			}	
 			else{
 				a1 =true;
 				rotalpha1.resume();
-
+				s2 = -2;
+				mtr.setUserData(s2);
 			}
 		}
 		if(e.getKeyCode() == KeyEvent.VK_2){
@@ -510,7 +557,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			else{
 				a2 =true;
 				rotalpha2.resume();
-
+				s1 = 1;
+				mtr.setUserData(s1);
 			}
 		}
 		if(e.getKeyCode() == KeyEvent.VK_3){
@@ -521,7 +569,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			else{
 				a3 =true;
 				rotalpha3.resume();
-
+				s1 = 1;
+				mtr.setUserData(s1);
 			}
 		}
 		if(e.getKeyCode() == KeyEvent.VK_4){
@@ -532,7 +581,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			else{
 				a4 =true;
 				rotalpha4.resume();
-
+				s1 = 1;
+				mtr.setUserData(s1);
 			}
 		}
 		if(e.getKeyCode() == KeyEvent.VK_5){
@@ -543,7 +593,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			else{
 				a5 =true;
 				rotalpha5.resume();
-
+				s1 = 1;
+				mtr.setUserData(s1);
 			}
 		}
 		if(e.getKeyCode() == KeyEvent.VK_6){
@@ -554,7 +605,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			else{
 				a6 =true;
 				rotalpha6.resume();
-
+				s1 = 1;
+				mtr.setUserData(s1);
 			}
 		}
 		if(e.getKeyCode() == KeyEvent.VK_7){
@@ -565,7 +617,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			else{
 				a7 =true;
 				rotalpha7.resume();
-
+				s1 = 1;
+				mtr.setUserData(s1);
 			}
 		}
 		if(e.getKeyCode() == KeyEvent.VK_8){
@@ -576,7 +629,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			else{
 				a8 =true;
 				rotalpha8.resume();
-
+				s1 = 1;
+				mtr.setUserData(s1);
 			}
 		} 
 		if(e.getKeyCode() == KeyEvent.VK_9){
@@ -587,7 +641,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			else{
 				a9 =true;
 				rotalpha9.resume();
-
+				s1 = 1;
+				mtr.setUserData(s1);
 			}
 		}
 
@@ -643,14 +698,16 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if ((int) mtr.getUserData() == 2) {            // retrieve 'UserData'
 				rotalpha1.resume();
 				//alpha2.resume();
-				mtr.setUserData(-2);                        // set 'UserData' to a new value
+				s2 = -2;
+				mtr.setUserData(s2);                        // set 'UserData' to a new value
 				a1 = true;	
 
 			}
 			else if((int) mtr.getUserData() == -2){                                         // use 'UserData' as flag to switch color
 				rotalpha1.pause();
 				//alpha2.pause();
-				mtr.setUserData(2);                        // reset 'UserData'
+				s2 = 2;
+				mtr.setUserData(s2);                        // reset 'UserData'
 				a1 = false;
 				
 			}
@@ -659,14 +716,15 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if ((int) mtr.getUserData() == 3) {            // retrieve 'UserData'
 				alpha2.resume();
 				//alpha2.resume();
-				mtr.setUserData(-3);                        // set 'UserData' to a new value
 				v = true;	
-
+				s3 = -3;
+				mtr.setUserData(s3); 
 			}
 			else if((int) mtr.getUserData() == -3){                                         // use 'UserData' as flag to switch color
 				alpha2.pause();
 				//alpha2.pause();
-				mtr.setUserData(3);                        // reset 'UserData'
+				s3 = 3;
+				mtr.setUserData(s3);                        // reset 'UserData'
 				v = false;
 
 			}
@@ -674,14 +732,16 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if ((int) mtr.getUserData() == 4) {            // retrieve 'UserData'
 				rotalpha2.resume();
 				//alpha2.resume();
-				mtr.setUserData(-4);                        // set 'UserData' to a new value
+				s4 = -4;
+				mtr.setUserData(s4);                        // set 'UserData' to a new value
 				a2 = true;	
 
 			}
 			else if((int) mtr.getUserData() == -4){                                         // use 'UserData' as flag to switch color
 				rotalpha2.pause();
 				//alpha2.pause();
-				mtr.setUserData(4);                        // reset 'UserData'
+				s4 = 4;
+				mtr.setUserData(s4);                        // reset 'UserData'
 				a2 = false;
 				
 			}
@@ -689,15 +749,17 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			//Earth
 			if ((int) mtr.getUserData() == 5) {            // retrieve 'UserData'
 				alpha3.resume();
+				s5 = -5;
 				//alpha2.resume();
-				mtr.setUserData(-5);                        // set 'UserData' to a new value
+				mtr.setUserData(s5);                        // set 'UserData' to a new value
 				er = true;	
 
 			}
 			else if((int) mtr.getUserData() == -5){                                         // use 'UserData' as flag to switch color
 				alpha3.pause();
 				//alpha2.pause();
-				mtr.setUserData(5);                        // reset 'UserData'
+				s5 = 5;
+				mtr.setUserData(s5);                        // reset 'UserData'
 				er = false;
 
 			}
@@ -705,14 +767,16 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if ((int) mtr.getUserData() == 6) {            // retrieve 'UserData'
 				rotalpha3.resume();
 				//alpha2.resume();
-				mtr.setUserData(-6);                        // set 'UserData' to a new value
+				s6 = -6;
+				mtr.setUserData(s6);                        // set 'UserData' to a new value
 				a3 = true;	
 
 			}
 			else if((int) mtr.getUserData() == -6){                                         // use 'UserData' as flag to switch color
 				rotalpha3.pause();
 				//alpha2.pause();
-				mtr.setUserData(6);                        // reset 'UserData'
+				s6 =6;
+				mtr.setUserData(s6);                        // reset 'UserData'
 				a3 = false;
 				
 			}
@@ -721,14 +785,16 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if ((int) mtr.getUserData() == 7) {            // retrieve 'UserData'
 				alpha4.resume();
 				//alpha2.resume();
-				mtr.setUserData(-7);                        // set 'UserData' to a new value
+				s7 = -7;
+				mtr.setUserData(s7);                        // set 'UserData' to a new value
 				m = true;	
 
 			}
 			else if((int) mtr.getUserData() == -7){                                         // use 'UserData' as flag to switch color
 				alpha4.pause();
 				//alpha2.pause();
-				mtr.setUserData(7);                        // reset 'UserData'
+				s7 = 7;
+				mtr.setUserData(s7);                        // reset 'UserData'
 				m = false;
 
 			}
@@ -736,14 +802,16 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if ((int) mtr.getUserData() == 8) {            // retrieve 'UserData'
 				rotalpha4.resume();
 				//alpha2.resume();
-				mtr.setUserData(-8);                        // set 'UserData' to a new value
+				s8 = -8;
+				mtr.setUserData(s8);                        // set 'UserData' to a new value
 				a4 = true;	
 
 			}
 			else if((int) mtr.getUserData() == -8){                                         // use 'UserData' as flag to switch color
 				rotalpha4.pause();
 				//alpha2.pause();
-				mtr.setUserData(8);                        // reset 'UserData'
+				s8 = 8;
+				mtr.setUserData(s8);                        // reset 'UserData'
 				a4 = false;
 				
 			}
@@ -752,14 +820,16 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if ((int) mtr.getUserData() == 9) {            // retrieve 'UserData'
 				alpha5.resume();
 				//alpha2.resume();
-				mtr.setUserData(-9);                        // set 'UserData' to a new value
+				s9 = -9;
+				mtr.setUserData(s9);                        // set 'UserData' to a new value
 				j = true;	
 
 			}
 			else if((int) mtr.getUserData() == -9){                                         // use 'UserData' as flag to switch color
 				alpha5.pause();
 				//alpha2.pause();
-				mtr.setUserData(9);                        // reset 'UserData'
+				s9 = 9;
+				mtr.setUserData(s9);                        // reset 'UserData'
 				j = false;
 
 			}
@@ -767,14 +837,16 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if ((int) mtr.getUserData() == 10) {            // retrieve 'UserData'
 				rotalpha5.resume();
 				//alpha2.resume();
-				mtr.setUserData(-10);                        // set 'UserData' to a new value
+				s10 = -10;
+				mtr.setUserData(s10);                        // set 'UserData' to a new value
 				a5 = true;	
 
 			}
 			else if((int) mtr.getUserData() == -10){                                         // use 'UserData' as flag to switch color
 				rotalpha5.pause();
 				//alpha2.pause();
-				mtr.setUserData(10);                        // reset 'UserData'
+				s10 = 10;
+				mtr.setUserData(s10);                        // reset 'UserData'
 				a5 = false;
 				
 			}
@@ -783,14 +855,16 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if ((int) mtr.getUserData() == 11) {            // retrieve 'UserData'
 				alpha6.resume();
 				//alpha2.resume();
-				mtr.setUserData(-11);                        // set 'UserData' to a new value
+				s11 = -11;
+				mtr.setUserData(s11);                        // set 'UserData' to a new value
 				s = true;	
 
 			}
 			else if((int) mtr.getUserData() == -11){                                         // use 'UserData' as flag to switch color
 				alpha6.pause();
 				//alpha2.pause();
-				mtr.setUserData(11);                        // reset 'UserData'
+				s11 = 11;
+				mtr.setUserData(s11);                        // reset 'UserData'
 				s = false;
 
 			}
@@ -798,7 +872,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if ((int) mtr.getUserData() == 12) {            // retrieve 'UserData'
 				rotalpha6.resume();
 				//alpha2.resume();
-				mtr.setUserData(-12);                        // set 'UserData' to a new value
+				s12 = -12;
+				mtr.setUserData(s12);                        // set 'UserData' to a new value
 				a6 = true;	
 
 			}
