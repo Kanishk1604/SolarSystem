@@ -66,7 +66,7 @@ class circle extends RingObjectsKS{
     public circle(float rad){
         r = rad;
         Transform3D rotator = new Transform3D();           // 4x4 matrix for rotation
-		rotator.rotZ(Math.PI/6);  
+		rotator.rotZ(Math.PI / 6);         //2.8
 		Transform3D trfm = new Transform3D();              // 4x4 matrix for composition
 
 		trfm.mul(rotator);                                 // apply rotation first
@@ -96,57 +96,71 @@ class circle extends RingObjectsKS{
 	}
 }
 
-
-//class for smallest ring shape
 class export extends RingObjectsKS {
-	protected BranchGroup objBG ;                           // load external object to 'objBG'
+    protected BranchGroup objBG; // load external object to 'objBG'
     private String obj_name;
     Color3f clr;
     private float scaling;
     private float aa;
     private float b;
     private float d;
-    public export(String obj,Color3f c,float scale,float aa,float b,float d) {                                  // identify object as "Ring1.obj"
+
+    public export(String obj, Color3f c, float scale, float aa, float b, float d) { // identify object as "Ring1.obj"
         obj_name = obj;
-        clr = c;       
+        clr = c;
         scaling = scale;
         this.aa = aa;
         this.b = b;
         this.d = d;
 
-	}
+    }
 
     protected Node create_Object() {
-		ObjectFile f = new ObjectFile(ObjectFile.RESIZE, (float) (60 * Math.PI / 180.0));
-		Scene s = null;
-		try {                                       // load object's definition file to 's'
-			s = f.load("C:\\solarsystem\\soalr\\image\\"+obj_name+ ".obj");
-		} catch (FileNotFoundException e) {
-			System.err.println(e);
-			System.exit(1);
-		} catch (ParsingErrorException e) {
-			System.err.println(e);
-			System.exit(1);
-		} catch (IncorrectFormatException e) {
-			System.err.println(e);
-			System.exit(1);
-		}	
+        ObjectFile f = new ObjectFile(ObjectFile.RESIZE, (float) (60 * Math.PI / 180.0));
+        Scene s = null;
+        try { // load object's definition file to 's'
+            s = f.load("C:\\solarsystem\\soalr\\image\\" + obj_name + ".obj");
+        } catch (FileNotFoundException e) {
+            System.err.println(e);
+            System.exit(1);
+        } catch (ParsingErrorException e) {
+            System.err.println(e);
+            System.exit(1);
+        } catch (IncorrectFormatException e) {
+            System.err.println(e);
+            System.exit(1);
+        }
         objBG = s.getSceneGroup();
-        Appearance a = CommonsKS.obj_Appearance(clr);       //adding the appearance
-        Shape3D sh = (Shape3D)  objBG.getChild(0);
+        Appearance a = CommonsKS.obj_Appearance(clr); // adding the appearance
+        a.setTexture(setTexture()); // set the texture to the appearance
+        Shape3D sh = (Shape3D) objBG.getChild(0);
         sh.setAppearance(a);
         Transform3D r1 = new Transform3D();
-        r1.setTranslation(new Vector3f((float) aa, (float) b,(float) d));     //0,0.06f,0
-		r1.setScale(scaling);      //0.35
-		TransformGroup R1 =new TransformGroup(r1);
+        r1.setTranslation(new Vector3f((float) aa, (float) b, (float) d)); // 0,0.06f,0
+        r1.setScale(scaling); // 0.35
+        TransformGroup R1 = new TransformGroup(r1);
         R1.addChild(objBG);
         return R1;
-	}
-	/* a function to attach the current object to 'objTG' and return 'objTG' */
-	public Node position_Object() {
-		return create_Object();                                // return 'objTG' as object's position
-	}
+    }
+
+    private Texture setTexture() {
+        String filename = "C:\\solarsystem\\soalr\\image\\"+ obj_name + ".jpg";                                                                                                 // texture file
+        TextureLoader loader = new TextureLoader(filename, null);
+        ImageComponent2D image = loader.getImage();
+        if (image == null)
+            System.out.println("load failed for texture: " + filename);
+        Texture2D texture = new Texture2D(Texture.BASE_LEVEL,
+                Texture.RGBA, image.getWidth(), image.getHeight());
+        texture.setImage(0, image);
+        return texture;
+    }
+
+    /* a function to attach the current object to 'objTG' and return 'objTG' */
+    public Node position_Object() {
+        return create_Object(); // return 'objTG' as object's position
+    }
 }
+
 class Sun extends RingObjectsKS {
     protected BranchGroup objBG; // load external object to 'objBG'
     Color3f clr;
@@ -662,10 +676,18 @@ class Meteor extends RingObjectsKS {
     protected BranchGroup objBG; // load external object to 'objBG'
     private String obj_name;
     Color3f clr;
+    private float aa;
+    private float b;
+    private float cc;
+    private int num;
 
-    public Meteor(String obj, Color3f c) { // identify object as "Ring1.obj"
+    public Meteor(String obj, int num,Color3f c,float aa,float bb,float cc) { // identify object as "Ring1.obj"
         obj_name = obj;
         clr = c;
+        this.aa = aa;
+        b = bb;
+        this.cc = cc;
+        this.num = num;
     }
 
     protected Node create_Object() {
@@ -687,10 +709,10 @@ class Meteor extends RingObjectsKS {
         Appearance a = CommonsKS.obj_Appearance(clr); // adding the appearance
         Shape3D sh = (Shape3D) objBG.getChild(0);
         sh.setAppearance(a);
-        sh.setUserData(-1);
+        sh.setUserData(num);
         Transform3D r1 = new Transform3D();
-        r1.setTranslation(new Vector3f(1, 2f, 1));
-        r1.setScale(0.01);
+        r1.setTranslation(new Vector3f((float) aa,(float) b,(float) cc));      //1, 2f, 1
+        r1.setScale(0.02);
         TransformGroup R1 = new TransformGroup(r1);
         R1.addChild(objBG);
         return R1;

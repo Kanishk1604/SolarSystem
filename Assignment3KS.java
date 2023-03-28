@@ -30,7 +30,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
     
 	private static final long serialVersionUID = 1L;
 	private static JFrame frame;
-	private static final int OBJ_NUM = 1;
+	private static final int OBJ_NUM = 1; 
 	protected static Alpha alpha1;                           //this is for revolving
 	protected static Alpha alpha2;                           //this is for revolving
 	protected static Alpha alpha3;                           //this is for revolving
@@ -62,9 +62,9 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	private static RingObjectsKS uranus;
 	private static RingObjectsKS neptune;
 	private static RingObjectsKS pluto;
-	private static RingObjectsKS meteor;
+	
 
-	private static RingObjectsKS[] Object3D = new RingObjectsKS[9];;
+	private static RingObjectsKS[] Object3D = new RingObjectsKS[27];
 
 	private static boolean y = true;
 	private static boolean v = true;
@@ -86,11 +86,14 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	private static boolean a8 = true;
 	private static boolean a9 = true;
 
+	public static int s1 = -1;
+
     private static PickTool pickTool;
     private Canvas3D canvas;
 	private static TransformGroup R1;
 
-	private static Sphere sphere;
+	private static Sphere mtr;
+	public static Alpha get_Alpha() { return alpha1; };    // NOTE: keep for future use 
 
 	public static BranchGroup create_Scene() {
         Transform3D scaler = new Transform3D(); // 4x4 matrix for scaling
@@ -120,14 +123,45 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         venus = new Venus(CommonsKS.White, (float) 1.8, (float) 2); // create the external object
         earth = new Earth(CommonsKS.White, (float) 1.9, (float) 3); // create the external object
         mars = new Mars(CommonsKS.White, (float) 1.6, (float) 4); // create the external object
-        jupiter = new Jupiter(CommonsKS.White, (float) 3.2, (float) 5); // create the external object
-        saturn = new export("Saturn", CommonsKS.White, (float) 1.4, (float) 0.0, (float) 0.0f, (float) 6); // create
-        uranus = new Uranus(CommonsKS.White, (float) 2.8, (float) 7); // create the external object
+        jupiter = new Jupiter(CommonsKS.White, (float) 3.4, (float) 5); // create the external object
+        saturn = new export("Saturn", CommonsKS.White, (float) 0.7, (float) 0.0, (float) 0.0f, (float) 6); // create
+        uranus = new export("Uranus", CommonsKS.White, (float) 1.5, (float) 0.0, (float) 0.0f, (float) 8); // create
         neptune = new Neptune(CommonsKS.White, (float) 2.3, (float) 8); // create the external object
         pluto = new Pluto(CommonsKS.White, (float) 0.7, (float) 9); // create the external object
 
-        meteor = new Meteor("meteor1", CommonsKS.Grey);
+        Object3D[9] = new Meteor("meteor1", s1,CommonsKS.Grey,0f,0.26f,0.9f);
+        Object3D[10] = new Meteor("meteor2", -2,CommonsKS.Grey,0f,0.26f,1.1f);
+
+        Object3D[11] = new Meteor("meteor3",-3, CommonsKS.Grey,0f,0.56f,1.7f);
+        Object3D[12] = new Meteor("meteor4",-4, CommonsKS.Grey,0f,0.56f,1.9f);
+        
+		Object3D[13] = new Meteor("meteor5",-5, CommonsKS.Grey,0f,0.86f,2.5f);
+        Object3D[14] = new Meteor("meteor6",-6, CommonsKS.Grey,0f,0.86f,2.7f);
+
+        Object3D[15] = new Meteor("meteor7",-7, CommonsKS.Grey,0f,1.16f,3.5f);
+        Object3D[16] = new Meteor("meteor8",-8 ,CommonsKS.Grey,0f,1.16f,3.7f);
+
+        Object3D[17] = new Meteor("meteor9",-9, CommonsKS.Grey,0f,1.46f,4.3f);
+        Object3D[18] = new Meteor("meteor10",-10 ,CommonsKS.Grey,0f,1.46f,4.5f);
 		
+        Object3D[19] = new Meteor("meteor11",-11, CommonsKS.Grey,0f,1.76f,5.3f);
+        Object3D[20] = new Meteor("meteor12",-12, CommonsKS.Grey,0f,1.76f,5.5f);
+		
+        Object3D[21] = new Meteor("meteor11",-13, CommonsKS.Grey,0f,2.06f,6.3f);
+        Object3D[22] = new Meteor("meteor12",-14, CommonsKS.Grey,0f,2.06f,6.5f);
+
+        Object3D[23] = new Meteor("meteor11",-15, CommonsKS.Grey,0f,2.36f,7.3f);
+        Object3D[24] = new Meteor("meteor12",-16, CommonsKS.Grey,0f,2.36f,7.5f);		
+
+        Object3D[25] = new Meteor("meteor11",-17, CommonsKS.Grey,0f,2.66f,8.7f);
+        Object3D[26] = new Meteor("meteor12",-18, CommonsKS.Grey,0f,2.66f,8.9f);	
+		TransformGroup met = new TransformGroup();
+		
+		 //meteors
+		for(int i=9;i<27;i++) {
+			met.addChild(Object3D[i].position_Object());
+		}
+	
 		TransformGroup sunTG= new TransformGroup();
 
 		TransformGroup mercuryTG = new TransformGroup();
@@ -160,28 +194,27 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		TransformGroup plutoTG2 = new TransformGroup();
 		
 		TransformGroup str = new TransformGroup();
-		TransformGroup met = new TransformGroup();
 
 
-		alpha1 =new Alpha(-1,5000);
-		alpha2 =new Alpha(-1,5000);
-		alpha3 =new Alpha(-1,5000);
-		alpha4 =new Alpha(-1,5000);
-		alpha5 =new Alpha(-1,5000);
-		alpha6 =new Alpha(-1,5000);
-		alpha7 =new Alpha(-1,5000);
-		alpha8 =new Alpha(-1,5000);
-		alpha9 =new Alpha(-1,5000);
+		alpha1 = new Alpha(-1, 3500);
+        alpha2 = new Alpha(-1, 6000);
+        alpha3 = new Alpha(-1, 9000);
+        alpha4 = new Alpha(-1, 11000);
+        alpha5 = new Alpha(-1, 20000);
+        alpha6 = new Alpha(-1, 25000);
+        alpha7 = new Alpha(-1, 31000);
+        alpha8 = new Alpha(-1, 42000);
+        alpha9 = new Alpha(-1, 51000);
 
-		rotalpha1 = new Alpha(-1,2500) ;
-		rotalpha2 = new Alpha(-1,2500) ;
-		rotalpha3 = new Alpha(-1,2500) ;
-		rotalpha4 = new Alpha(-1,2500) ;
-		rotalpha5 = new Alpha(-1,2500) ;
-		rotalpha6 = new Alpha(-1,2500) ;
-		rotalpha7 = new Alpha(-1,2500) ;
-		rotalpha8 = new Alpha(-1,2500) ;
-		rotalpha9 = new Alpha(-1,2500) ;
+		rotalpha1 = new Alpha(-1, 1500);
+        rotalpha2 = new Alpha(-1, 3000);
+        rotalpha3 = new Alpha(-1, 4500);
+        rotalpha4 = new Alpha(-1, 5000);
+        rotalpha5 = new Alpha(-1, 10500);
+        rotalpha6 = new Alpha(-1, 11000);
+        rotalpha7 = new Alpha(-1, 17000);
+        rotalpha8 = new Alpha(-1, 21000);
+        rotalpha9 = new Alpha(-1, 25000);
 
 
 		sunTG.addChild(sun.position_Object());     
@@ -216,11 +249,12 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		saturnTG.addChild(CommonsKS.rotate_Behavior(5000,saturnTG,alpha6));
 		//saturnTG2.addChild(CommonsKS.rotating(400, saturnTG2,rotalpha6,(float)6));             
 
-		uranusTG.addChild(uranus.position_Object());                // addding child ring1	
-		uranusTG2.addChild(uranus.position_Object());                // addding child ring1	
-		uranusTG.addChild(CommonsKS.rotate_Behavior(30000,uranusTG,alpha7));
-		uranusTG2.addChild(CommonsKS.rotating(400, uranusTG2,rotalpha7,(float)7));             
-
+		uranus = new export("Uranus", CommonsKS.White, (float) 1.4, (float) 0.0, (float) 0.0f, (float) 8); // create
+		uranusTG.addChild(uranus.position_Object()); // addding child ring1
+        // uranusTG2.addChild(uranus.position_Object()); // addding child ring1
+        uranusTG.addChild(CommonsKS.rotate_Behavior(30000, uranusTG, alpha7));
+        // uranusTG2.addChild(CommonsKS.rotating(400, uranusTG2, rotalpha7, (float) 7));
+		
 		neptuneTG.addChild(neptune.position_Object());                // addding child ring1	
 		neptuneTG2.addChild(neptune.position_Object());                // addding child ring1	
 		neptuneTG.addChild(CommonsKS.rotate_Behavior(40000,neptuneTG,alpha8));
@@ -292,9 +326,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		str.addChild(Object3D[7].position_Object());
 		str.addChild(Object3D[8].position_Object());
 
-		//meteors
-		met.addChild(meteor.position_Object());
-	
+		
 	BoundingSphere b = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), Double.MAX_VALUE);
 		sceneBG.addChild(cir);
 		sceneBG.addChild(R1);
@@ -346,13 +378,14 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			if (y) {
 				alpha1.pause();
 				y = false;
-				// sphere.setUserData(1);
+				s1 = -1;
+				mtr.setUserData(s1);                        // reset 'UserData'
 				}
 			else {
 				y = true;
 				alpha1.resume();
-				// sphere.setUserData(-1);
-
+				s1 = 1;
+				mtr.setUserData(s1);   
 			}
 		}
 		if ((e.getKeyCode() == KeyEvent.VK_V)){
@@ -586,22 +619,288 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 			
 		if (pickTool.pickClosest() != null) {
 			PickResult pickResult = pickTool.pickClosest();// obtain the closest hit
-			sphere = (Sphere)pickResult.getNode(PickResult.PRIMITIVE);
-			
-			if ((int) sphere.getUserData() == 1) {            // retrieve 'UserData'
+			Node mtr = pickResult.getNode(PickResult.SHAPE3D); // originally a PRIMITIVE as a box
+            Shape3D pick = (Shape3D) mtr; // cast to Shape3D
+
+
+			//Mercury
+			if ((int) mtr.getUserData() == 1) {            // retrieve 'UserData'
 				alpha1.resume();
 				//alpha2.resume();
-	
-				sphere.setUserData(-1);                        // set 'UserData' to a new value
+				s1 = -1;
+				mtr.setUserData(s1);                        // set 'UserData' to a new value
 				y = true;	
 
 			}
-			else {                                         // use 'UserData' as flag to switch color
-				alpha1.pause();
-				//alpha2.pause();
-				sphere.setUserData(1);                        // reset 'UserData'
+			else if((int) mtr.getUserData() == -1){                                         // use 'UserData' as flag to switch color
+				alpha1.pause();  
+				s1 = 1; 
+				mtr.setUserData(s1);                        // reset 'UserData'
 				y = false;
 
+			}
+
+			if ((int) mtr.getUserData() == 2) {            // retrieve 'UserData'
+				rotalpha1.resume();
+				//alpha2.resume();
+				mtr.setUserData(-2);                        // set 'UserData' to a new value
+				a1 = true;	
+
+			}
+			else if((int) mtr.getUserData() == -2){                                         // use 'UserData' as flag to switch color
+				rotalpha1.pause();
+				//alpha2.pause();
+				mtr.setUserData(2);                        // reset 'UserData'
+				a1 = false;
+				
+			}
+
+			//Venus
+			if ((int) mtr.getUserData() == 3) {            // retrieve 'UserData'
+				alpha2.resume();
+				//alpha2.resume();
+				mtr.setUserData(-3);                        // set 'UserData' to a new value
+				v = true;	
+
+			}
+			else if((int) mtr.getUserData() == -3){                                         // use 'UserData' as flag to switch color
+				alpha2.pause();
+				//alpha2.pause();
+				mtr.setUserData(3);                        // reset 'UserData'
+				v = false;
+
+			}
+
+			if ((int) mtr.getUserData() == 4) {            // retrieve 'UserData'
+				rotalpha2.resume();
+				//alpha2.resume();
+				mtr.setUserData(-4);                        // set 'UserData' to a new value
+				a2 = true;	
+
+			}
+			else if((int) mtr.getUserData() == -4){                                         // use 'UserData' as flag to switch color
+				rotalpha2.pause();
+				//alpha2.pause();
+				mtr.setUserData(4);                        // reset 'UserData'
+				a2 = false;
+				
+			}
+
+			//Earth
+			if ((int) mtr.getUserData() == 5) {            // retrieve 'UserData'
+				alpha3.resume();
+				//alpha2.resume();
+				mtr.setUserData(-5);                        // set 'UserData' to a new value
+				er = true;	
+
+			}
+			else if((int) mtr.getUserData() == -5){                                         // use 'UserData' as flag to switch color
+				alpha3.pause();
+				//alpha2.pause();
+				mtr.setUserData(5);                        // reset 'UserData'
+				er = false;
+
+			}
+
+			if ((int) mtr.getUserData() == 6) {            // retrieve 'UserData'
+				rotalpha3.resume();
+				//alpha2.resume();
+				mtr.setUserData(-6);                        // set 'UserData' to a new value
+				a3 = true;	
+
+			}
+			else if((int) mtr.getUserData() == -6){                                         // use 'UserData' as flag to switch color
+				rotalpha3.pause();
+				//alpha2.pause();
+				mtr.setUserData(6);                        // reset 'UserData'
+				a3 = false;
+				
+			}
+
+			//mars
+			if ((int) mtr.getUserData() == 7) {            // retrieve 'UserData'
+				alpha4.resume();
+				//alpha2.resume();
+				mtr.setUserData(-7);                        // set 'UserData' to a new value
+				m = true;	
+
+			}
+			else if((int) mtr.getUserData() == -7){                                         // use 'UserData' as flag to switch color
+				alpha4.pause();
+				//alpha2.pause();
+				mtr.setUserData(7);                        // reset 'UserData'
+				m = false;
+
+			}
+
+			if ((int) mtr.getUserData() == 8) {            // retrieve 'UserData'
+				rotalpha4.resume();
+				//alpha2.resume();
+				mtr.setUserData(-8);                        // set 'UserData' to a new value
+				a4 = true;	
+
+			}
+			else if((int) mtr.getUserData() == -8){                                         // use 'UserData' as flag to switch color
+				rotalpha4.pause();
+				//alpha2.pause();
+				mtr.setUserData(8);                        // reset 'UserData'
+				a4 = false;
+				
+			}
+
+			//Jupiter
+			if ((int) mtr.getUserData() == 9) {            // retrieve 'UserData'
+				alpha5.resume();
+				//alpha2.resume();
+				mtr.setUserData(-9);                        // set 'UserData' to a new value
+				j = true;	
+
+			}
+			else if((int) mtr.getUserData() == -9){                                         // use 'UserData' as flag to switch color
+				alpha5.pause();
+				//alpha2.pause();
+				mtr.setUserData(9);                        // reset 'UserData'
+				j = false;
+
+			}
+
+			if ((int) mtr.getUserData() == 10) {            // retrieve 'UserData'
+				rotalpha5.resume();
+				//alpha2.resume();
+				mtr.setUserData(-10);                        // set 'UserData' to a new value
+				a5 = true;	
+
+			}
+			else if((int) mtr.getUserData() == -10){                                         // use 'UserData' as flag to switch color
+				rotalpha5.pause();
+				//alpha2.pause();
+				mtr.setUserData(10);                        // reset 'UserData'
+				a5 = false;
+				
+			}
+
+			//Saturn
+			if ((int) mtr.getUserData() == 11) {            // retrieve 'UserData'
+				alpha6.resume();
+				//alpha2.resume();
+				mtr.setUserData(-11);                        // set 'UserData' to a new value
+				s = true;	
+
+			}
+			else if((int) mtr.getUserData() == -11){                                         // use 'UserData' as flag to switch color
+				alpha6.pause();
+				//alpha2.pause();
+				mtr.setUserData(11);                        // reset 'UserData'
+				s = false;
+
+			}
+
+			if ((int) mtr.getUserData() == 12) {            // retrieve 'UserData'
+				rotalpha6.resume();
+				//alpha2.resume();
+				mtr.setUserData(-12);                        // set 'UserData' to a new value
+				a6 = true;	
+
+			}
+			else if((int) mtr.getUserData() == -12){                                         // use 'UserData' as flag to switch color
+				rotalpha6.pause();
+				//alpha2.pause();
+				mtr.setUserData(12);                        // reset 'UserData'
+				a6 = false;
+				
+			}
+
+			//Uranus
+			if ((int) mtr.getUserData() == 13) {            // retrieve 'UserData'
+				alpha7.resume();
+				//alpha2.resume();
+				mtr.setUserData(-13);                        // set 'UserData' to a new value
+				u = true;	
+
+			}
+			else if((int) mtr.getUserData() == -13){                                         // use 'UserData' as flag to switch color
+				alpha7.pause();
+				//alpha2.pause();
+				mtr.setUserData(13);                        // reset 'UserData'
+				u = false;
+
+			}
+
+			if ((int) mtr.getUserData() == 14) {            // retrieve 'UserData'
+				rotalpha7.resume();
+				//alpha2.resume();
+				mtr.setUserData(-14);                        // set 'UserData' to a new value
+				a7 = true;	
+
+			}
+			else if((int) mtr.getUserData() == -14){                                         // use 'UserData' as flag to switch color
+				rotalpha7.pause();
+				//alpha2.pause();
+				mtr.setUserData(14);                        // reset 'UserData'
+				a7 = false;
+				
+			}
+
+			//Neptune
+			if ((int) mtr.getUserData() == 15) {            // retrieve 'UserData'
+				alpha8.resume();
+				//alpha2.resume();
+				mtr.setUserData(-15);                        // set 'UserData' to a new value
+				n = true;	
+
+			}
+			else if((int) mtr.getUserData() == -15){                                         // use 'UserData' as flag to switch color
+				alpha8.pause();
+				//alpha2.pause();
+				mtr.setUserData(15);                        // reset 'UserData'
+				n = false;
+
+			}
+
+			if ((int) mtr.getUserData() == 16) {            // retrieve 'UserData'
+				rotalpha8.resume();
+				//alpha2.resume();
+				mtr.setUserData(-16);                        // set 'UserData' to a new value
+				a8 = true;	
+
+			}
+			else if((int) mtr.getUserData() == -16){                                         // use 'UserData' as flag to switch color
+				rotalpha8.pause();
+				//alpha2.pause();
+				mtr.setUserData(16);                        // reset 'UserData'
+				a8 = false;
+				
+			}
+
+			//Pluto
+			if ((int) mtr.getUserData() == 17) {            // retrieve 'UserData'
+				alpha9.resume();
+				//alpha2.resume();
+				mtr.setUserData(-17);                        // set 'UserData' to a new value
+				p = true;	
+
+			}
+			else if((int) mtr.getUserData() == -17){                                         // use 'UserData' as flag to switch color
+				alpha9.pause();
+				//alpha2.pause();
+				mtr.setUserData(17);                        // reset 'UserData'
+				p = false;
+
+			}
+
+			if ((int) mtr.getUserData() == 18) {            // retrieve 'UserData'
+				rotalpha9.resume();
+				//alpha2.resume();
+				mtr.setUserData(-18);                        // set 'UserData' to a new value
+				a9 = true;	
+
+			}
+			else if((int) mtr.getUserData() == -18){                                         // use 'UserData' as flag to switch color
+				rotalpha9.pause();
+				//alpha2.pause();
+				mtr.setUserData(18);                        // reset 'UserData'
+				a9 = false;
+				
 			}
 		} 
     }
