@@ -32,8 +32,8 @@ public class CollisionDetectShapes extends Behavior {
 
 	@Override
 	public void initialize() { // USE_GEOMETRY USE_BOUNDS
-		wEnter = new WakeupOnCollisionEntry(shape, WakeupOnCollisionEntry.USE_GEOMETRY);
-		wExit = new WakeupOnCollisionExit(shape, WakeupOnCollisionExit.USE_GEOMETRY);
+		wEnter = new WakeupOnCollisionEntry(shape, WakeupOnCollisionEntry.USE_BOUNDS);
+		wExit = new WakeupOnCollisionExit(shape, WakeupOnCollisionExit.USE_BOUNDS);
 		wakeupOn(wEnter); // initialize the behavior
 	}
 
