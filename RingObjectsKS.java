@@ -4,6 +4,7 @@ import java.awt.Font;
 import org.jogamp.java3d.*;
 import org.jogamp.java3d.utils.geometry.*;
 import org.jogamp.java3d.utils.image.TextureLoader;
+import org.jogamp.java3d.utils.universe.SimpleUniverse;
 import org.jogamp.vecmath.*;
 import java.io.FileNotFoundException;
 
@@ -17,8 +18,8 @@ public abstract class RingObjectsKS {
 	protected Alpha rotationAlpha;                           // NOTE: keep for future use
     protected abstract Node create_Object();	           // use 'Node' for both Group and Shape3D
     public abstract Node position_Object();
-    public Alpha get_Alpha() { return alpha; };    // NOTE: keep for future use 
-	protected static Alpha alpha;
+    // public Alpha get_Alpha() { return alpha; };    // NOTE: keep for future use 
+	// protected static Alpha alpha;
     // public static Transform3D trfm;
 
 }
@@ -105,15 +106,15 @@ class export extends RingObjectsKS {
     private float aa;
     private float b;
     private float d;
-
-    public export(String obj, Color3f c, float scale, float aa, float b, float d) { // identify object as "Ring1.obj"
+    SimpleUniverse su;
+    public export(String obj, Color3f c, float scale, float aa, float b, float d,SimpleUniverse su) { // identify object as "Ring1.obj"
         obj_name = obj;
         clr = c;
         scaling = scale;
         this.aa = aa;
         this.b = b;
         this.d = d;
-
+        this.su = su;
     }
 
     protected Node create_Object() {
@@ -136,10 +137,14 @@ class export extends RingObjectsKS {
         a.setTexture(setTexture()); // set the texture to the appearance
         Shape3D sh = (Shape3D) objBG.getChild(0);
         sh.setAppearance(a);
+        CollisionDetectShapes cd = new CollisionDetectShapes(sh);
+		cd.setSchedulingBounds(CommonsKS.twentyBS);        // detect column's collision
+        
         Transform3D r1 = new Transform3D();
         r1.setTranslation(new Vector3f((float) aa, (float) b, (float) d)); // 0,0.06f,0
         r1.setScale(scaling); // 0.35
         TransformGroup R1 = new TransformGroup(r1);
+		R1.addChild(cd);
         R1.addChild(objBG);
         return R1;
     }
@@ -200,9 +205,9 @@ class Sun extends RingObjectsKS {
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
 
-        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        Sphere s =  new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
         R1.addChild(s);
-        //s.setUserData(1);
+        // s.setUserData(1);
         // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
         return R1;
     }
@@ -733,11 +738,11 @@ class rocket extends RingObjectsKS	{
 	private TransformGroup objSH6 = new TransformGroup();
 	private TransformGroup objTG = new TransformGroup();
 	private TransformGroup objTG1 = new TransformGroup();
-	private void createContent() {
+	private void createContent(Alpha alpha) {
 		TransformGroup baseTG = new TransformGroup();
 		baseTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		baseTG.addChild(objTG);
-		Alpha alpha = new Alpha(-1, Alpha.INCREASING_ENABLE|Alpha.DECREASING_ENABLE, 0, 0, 0, 2000, 1000, 4000, 2000, 1000);
+
 		Transform3D axisPosition = new Transform3D();
 		//axisPosition.rotZ(Math.PI / 2.0);
 		PositionInterpolator positionInterpol = new PositionInterpolator(alpha, baseTG, axisPosition,-10f, 10f);
@@ -745,7 +750,7 @@ class rocket extends RingObjectsKS	{
 		objTG1.addChild(baseTG);
 		objTG1.addChild(positionInterpol);
 		}
-	public rocket()	{
+	public rocket(Alpha alpha)	{
 		Transform3D translation = new Transform3D();           
 		translation.setTranslation(new Vector3f(0f, 0f, 1f));		//vector for translation
 
@@ -771,7 +776,7 @@ class rocket extends RingObjectsKS	{
 		objTG.addChild(objSH5);
 		objTG.addChild(objSH6);
 		
-		createContent();
+		createContent(alpha);
 	}
 	protected Node create_Object()	{                            // attach "FanSwitch" to 'objTG'
 		return objTG1;                                      // use 'objTG' to attach "FanSwitch" to the previous TG
