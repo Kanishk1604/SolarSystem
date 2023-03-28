@@ -18,7 +18,11 @@ import org.jogamp.java3d.utils.picking.PickResult;
 import org.jogamp.java3d.utils.picking.PickTool;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
 import org.jogamp.vecmath.*;
+import org.jogamp.java3d.utils.universe.Viewer;
+import java.net.URL;
 
+import org.jdesktop.j3d.examples.sound.PointSoundBehavior;
+import org.jdesktop.j3d.examples.sound.audio.JOALMixer;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -30,6 +34,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
     
 	private static final long serialVersionUID = 1L;
 	private static JFrame frame;
+	private static SimpleUniverse su;
 	private static final int OBJ_NUM = 1; 
 	protected static Alpha alpha1;                           //this is for revolving
 	protected static Alpha alpha2;                           //this is for revolving
@@ -40,6 +45,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	protected static Alpha alpha7;                           //this is for revolving
 	protected static Alpha alpha8;                           //this is for revolving
 	protected static Alpha alpha9;                           //this is for revolving
+	protected static Alpha alpha10;                           //this is for revolving
 	
 	protected static Alpha rotalpha1;                           //this is for rotating
 	protected static Alpha rotalpha2;                           //this is for rotating
@@ -65,6 +71,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	
 
 	private static RingObjectsKS[] Object3D = new RingObjectsKS[28];
+	private static boolean space = true;
 
 	private static boolean y = true;
 	private static boolean v = true;
@@ -85,6 +92,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	private static boolean a7 = true;
 	private static boolean a8 = true;
 	private static boolean a9 = true;
+	public static boolean ON = true;
 
 	public static int s1 = -1;
 	public static int s2 = -2;
@@ -112,6 +120,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	// public static TransformGroup rocket  = new TransformGroup();
 	private static Sphere mtr;
 	public static Alpha get_Alpha() { return alpha1; };    // NOTE: keep for future use 
+	private static PointSound ps;
 
 	public static BranchGroup create_Scene() {
         Transform3D scaler = new Transform3D(); // 4x4 matrix for scaling
@@ -142,8 +151,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         earth = new Earth(CommonsKS.White, (float) 1.9, (float) 3); // create the external object
         mars = new Mars(CommonsKS.White, (float) 1.6, (float) 4); // create the external object
         jupiter = new Jupiter(CommonsKS.White, (float) 3.4, (float) 5); // create the external object
-        saturn = new export("Saturn", CommonsKS.White, (float) 0.7, (float) 0.0, (float) 0.0f, (float) 6); // create
-        uranus = new export("Uranus", CommonsKS.White, (float) 1.5, (float) 0.0, (float) 0.0f, (float) 8); // create
+        saturn = new export("Saturn", CommonsKS.White, (float) 0.7, (float) 0.0, (float) 0.0f, (float) 6,su); // create
+        uranus = new export("Uranus", CommonsKS.White, (float) 1.5, (float) 0.0, (float) 0.0f, (float) 8,su); // create
         neptune = new Neptune(CommonsKS.White, (float) 2.3, (float) 8); // create the external object
         pluto = new Pluto(CommonsKS.White, (float) 0.7, (float) 9); // create the external object
 
@@ -174,7 +183,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         Object3D[25] = new Meteor("meteor11",s17, CommonsKS.Grey,0f,2.66f,8.7f);
         Object3D[26] = new Meteor("meteor12",s18, CommonsKS.Grey,0f,2.66f,8.9f);	
 		
-		Object3D[27] = new rocket();
+		Object3D[27] = new rocket(alpha10);
 		TransformGroup met = new TransformGroup();
 
 		 //meteors
@@ -226,6 +235,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         alpha7 = new Alpha(-1, 31000);
         alpha8 = new Alpha(-1, 42000);
         alpha9 = new Alpha(-1, 51000);
+        alpha10 = new Alpha(-1, 500);
 
 		rotalpha1 = new Alpha(-1, 1500);
         rotalpha2 = new Alpha(-1, 3000);
@@ -270,7 +280,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		saturnTG.addChild(CommonsKS.rotate_Behavior(5000,saturnTG,alpha6));
 		//saturnTG2.addChild(CommonsKS.rotating(400, saturnTG2,rotalpha6,(float)6));             
 
-		uranus = new export("Uranus", CommonsKS.White, (float) 1.4, (float) 0.0, (float) 0.0f, (float) 8); // create
+		uranus = new export("Uranus", CommonsKS.White, (float) 1.4, (float) 0.0, (float) 0.0f, (float) 8,su); // create
 		uranusTG.addChild(uranus.position_Object()); // addding child ring1
         // uranusTG2.addChild(uranus.position_Object()); // addding child ring1
         uranusTG.addChild(CommonsKS.rotate_Behavior(30000, uranusTG, alpha7));
@@ -350,6 +360,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		
 	BoundingSphere b = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), Double.MAX_VALUE);
 		sceneBG.addChild(cir);
+		R1.addChild(pointSound());
 		sceneBG.addChild(R1);
 		sceneBG.addChild(sceneTG);
 		sceneBG.addChild(str);
@@ -370,10 +381,10 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         pickTool = new PickTool(sceneBG);
         pickTool.setMode(PickTool.GEOMETRY);
 
-		SimpleUniverse su = new SimpleUniverse(canvas);    // create a SimpleUniverse
+		 su = new SimpleUniverse(canvas);    // create a SimpleUniverse
 		CommonsKS.define_Viewer(su, new Point3d(4.5d, 0.0d, 1.0d));
 		// CommonsKS.define_Viewer(su, new Point3d(0.0d, 0.0d, 0.0d));
-		
+		enableAudio(su);                                   // enable audio
 		sceneBG.addChild(CommonsKS.key_Navigation(su));     // allow key navigation
 		sceneBG.compile();		                           // optimize the BranchGroup
 		su.addBranchGraph(sceneBG);                        // attach the scene to SimpleUniverse
@@ -390,270 +401,316 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-				//Interaction using keyboard
+	private void enableAudio(SimpleUniverse simple_U) {
+
+        JOALMixer mixer = null;                                 // create a null mixer as a joalmixer
+        Viewer viewer = simple_U.getViewer();
+        viewer.getView().setBackClipDistance(20.0f);         // make object(s) disappear beyond 20f 
+
+        if (mixer == null && viewer.getView().getUserHeadToVworldEnable()) {
+            mixer = new JOALMixer(viewer.getPhysicalEnvironment());
+            if (!mixer.initialize()) {                       // add mixer as audio device if successful
+                System.out.println("Open AL failed to init");
+                viewer.getPhysicalEnvironment().setAudioDevice(null);
+            }
+        }
+    }
+
+    private static PointSound pointSound() {
+        URL url = null;
+        String filename = "C:\\lab6\\lab6\\src\\codesKS280\\magic_bells.wav";
+        try {
+            url = new URL("file", "localhost", filename);
+        } catch (Exception e) {
+            System.out.println("Can't open " + filename);
+        }
+        ps = new PointSound();                    // create and position a point sound
+        PointSoundBehavior player = new PointSoundBehavior(ps, url, new Point3f(0.0f, 0.0f, 0.0f));
+        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.9));
+		ps.setCapability(PointSound.ALLOW_ENABLE_WRITE);
+        return ps;
+    }
+
+	private static PointSound pointSound2() {
+        URL url = null;
+        String filename = "C:\\lab6\\lab6\\src\\codesKS280\\magic_bells.wav";
+        try {
+            url = new URL("file", "localhost", filename);
+        } catch (Exception e) {
+            System.out.println("Can't open " + filename);
+        }
+        ps = new PointSound();                    // create and position a point sound
+        PointSoundBehavior player = new PointSoundBehavior(ps, url, new Point3f(0.0f, 0.0f, 0.0f));
+        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 2));
+		ps.setCapability(PointSound.ALLOW_ENABLE_WRITE);
+        return ps;
+    }
+
+	private static PointSound pointSound3() {
+        URL url = null;
+        String filename = "C:\\lab6\\lab6\\src\\codesKS280\\magic_bells.wav";
+        try {
+            url = new URL("file", "localhost", filename);
+        } catch (Exception e) {
+            System.out.println("Can't open " + filename);
+        }
+        ps = new PointSound();                    // create and position a point sound
+        PointSoundBehavior player = new PointSoundBehavior(ps, url, new Point3f(0.0f, 0.0f, 0.0f));
+        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
+		ps.setCapability(PointSound.ALLOW_ENABLE_WRITE);
+        return ps;
+    }
+	
+	//Interaction using keyboard
 	@Override
-	public void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e) {
 
+        // if((e.getKeyCode() == KeyEvent.VK_R)){
+        // Transform3D uu = new Transform3D();
+        // uu.rotZ(Math.PI/2);
+        // trfm.mul(uu);
 
-		// if((e.getKeyCode() == KeyEvent.VK_R)){
-		// 	Transform3D uu = new Transform3D();
-		// 	uu.rotZ(Math.PI/2);
-		// 	trfm.mul(uu);
-			
-		// }
-		//For revolution of planets
-		if ((e.getKeyCode() == KeyEvent.VK_Y)){
-			if (y) {
-				alpha1.pause();
-				y = false;
-				s1 = -1;
-				mtr.setUserData(s1);                        // reset 'UserData'
-				}
+        // }
+        // For revolution of planets
+        if ((e.getKeyCode() == KeyEvent.VK_Y)) {
+            if (y){ 
+                alpha1.pause();
+                y = false;
+                s1 = -1;
+				// ON  = false;
+				// ps.setEnable(ON);
+                mtr.setUserData(s1); // reset 'UserData'
+			}
 			else {
-				y = true;
-				alpha1.resume();
-				s1 = 1;
-				mtr.setUserData(s1);   
+                y = true;
+                alpha1.resume();
+                s1 = 1;
+				// ON  = true;
+				// ps.setEnable(ON);
+                mtr.setUserData(s1);
 			}
-		}
-		if ((e.getKeyCode() == KeyEvent.VK_V)){
-			if (v) {
-				alpha2.pause();
-				v = false;
-				// sphere.setUserData(2);
-				s3 = -3;
-				mtr.setUserData(s3); 
-				}
-			else {
-				v = true;
-				alpha2.resume();
-				// sphere.setUserData(-2);
-				s3 = 3;
-				mtr.setUserData(s3);
-			}
-		}
-		if ((e.getKeyCode() == KeyEvent.VK_E)){
-			if (er) {
-				alpha3.pause();
-				er = false;
-				s5 = -5;
-				mtr.setUserData(s5);
-				}
-			else {
-				er = true;
-				alpha3.resume();
-				s5 = 5;
-				mtr.setUserData(s5);
-			}
-		}
-		if ((e.getKeyCode() == KeyEvent.VK_M)){
-			if (m) {
-				alpha4.pause();
-				m = false;
-				s7 = -7;
-				mtr.setUserData(s7);
-				}
-			else {
-				m = true;
-				alpha4.resume();
-				s7 = 7;
-				mtr.setUserData(s7);
-			}
-		}
-		if ((e.getKeyCode() == KeyEvent.VK_J)){
-			if (j) {
-				alpha5.pause();
-				m = false;
-				s9 = -9;
-				mtr.setUserData(s9);
-				}
-			else {
-				j = true;
-				alpha5.resume();
-				s9 = 9;
-				mtr.setUserData(s9);
-			}
-		}
-		if ((e.getKeyCode() == KeyEvent.VK_S)){
-			if (s) {
-				alpha6.pause();
-				s = false;
-				s11 = -11;
-				mtr.setUserData(s11);
-				}
-			else {
-				s = true;
-				alpha6.resume();
-				s11 = 11;
-				mtr.setUserData(s11);
-			}
-		}
-		if ((e.getKeyCode() == KeyEvent.VK_U)){
-			if (u) {
-				alpha7.pause();
-				u = false;
-				s13 = -13;
-				mtr.setUserData(s13);
-				}
-			else {
-				u = true;
-				alpha7.resume();
-				s13 = 13;
-				mtr.setUserData(s13);
-			}
-		}
+        }
+        if ((e.getKeyCode() == KeyEvent.VK_V)) {
+            if (v) {
+                alpha2.pause();
+                v = false;
+                // sphere.setUserData(2);
+                s3 = -3;
+                mtr.setUserData(s3);
+            } else {
+                v = true;
+                alpha2.resume();
+                // sphere.setUserData(-2);
+                s3 = 3;
+                mtr.setUserData(s3);
+            }
+        }
+        if ((e.getKeyCode() == KeyEvent.VK_E)) {
+            if (er) {
+                alpha3.pause();
+                er = false;
+                s5 = -5;
+                mtr.setUserData(s5);
+            } else {
+                er = true;
+                alpha3.resume();
+                s5 = 5;
+                mtr.setUserData(s5);
+            }
+        }
+        if ((e.getKeyCode() == KeyEvent.VK_M)) {
+            if (m) {
+                alpha4.pause();
+                m = false;
+                s7 = -7;
+                mtr.setUserData(s7);
+            } else {
+                m = true;
+                alpha4.resume();
+                s7 = 7;
+                mtr.setUserData(s7);
+            }
+        }
+        if ((e.getKeyCode() == KeyEvent.VK_J)) {
+            if (j) {
+                alpha5.pause();
+                m = false;
+                s9 = -9;
+                mtr.setUserData(s9);
+            } else {
+                j = true;
+                alpha5.resume();
+                s9 = 9;
+                mtr.setUserData(s9);
+            }
+        }
+        if ((e.getKeyCode() == KeyEvent.VK_S)) {
+            if (s) {
+                alpha6.pause();
+                s = false;
+                s11 = -11;
+                mtr.setUserData(s11);
+            } else {
+                s = true;
+                alpha6.resume();
+                s11 = 11;
+                mtr.setUserData(s11);
+            }
+        }
+        if ((e.getKeyCode() == KeyEvent.VK_U)) {
+            if (u) {
+                alpha7.pause();
+                u = false;
+                s13 = -13;
+                mtr.setUserData(s13);
+            } else {
+                u = true;
+                alpha7.resume();
+                s13 = 13;
+                mtr.setUserData(s13);
+            }
+        }
 
+        if ((e.getKeyCode() == KeyEvent.VK_N)) {
+            if (n) {
+                alpha8.pause();
+                n = false;
+                s15 = -15;
+                mtr.setUserData(s15);
+            } else {
+                n = true;
+                alpha8.resume();
+                s15 = 15;
+                mtr.setUserData(s15);
+            }
+        }
+        if ((e.getKeyCode() == KeyEvent.VK_P)) {
+            if (p) {
+                alpha9.pause();
+                p = false;
+                s17 = -17;
+                mtr.setUserData(s17);
+            } else {
+                p = true;
+                alpha9.resume();
+                s17 = 17;
+                mtr.setUserData(s17);
+            }
+        }
 
-		if ((e.getKeyCode() == KeyEvent.VK_N)){
-			if (n) {
-				alpha8.pause();
-				n = false;
-				s15 = -15;
-				mtr.setUserData(s15);
-				}
-			else {
-				n = true;
-				alpha8.resume();
-				s15 = 15;
-				mtr.setUserData(s15);
-			}
-		}
-		if ((e.getKeyCode() == KeyEvent.VK_P)){
-			if (p) {
-				alpha9.pause();
-				p = false;
-				s17 = -17;
-				mtr.setUserData(s17);
-				}
-			else {
-				p = true;
-				alpha9.resume();
-				s17 = 17;
-				mtr.setUserData(s17);
-			}
-		}
+        // for rotation of each planet
 
-		//for rotation of each planet
+        if (e.getKeyCode() == KeyEvent.VK_1) {
+            if (a1) {
+                rotalpha1.pause();
+                a1 = false;
+                s2 = 2;
+                mtr.setUserData(s2);
+            } else {
+                a1 = true;
+                rotalpha1.resume();
+                s2 = -2;
+                mtr.setUserData(s2);
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_2) {
+            if (a2) {
+                rotalpha2.pause();
+                a2 = false;
+            } else {
+                a2 = true;
+                rotalpha2.resume();
+                s1 = 1;
+                mtr.setUserData(s1);
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_3) {
+            if (a3) {
+                rotalpha3.pause();
+                a3 = false;
+            } else {
+                a3 = true;
+                rotalpha3.resume();
+                s1 = 1;
+                mtr.setUserData(s1);
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_4) {
+            if (a4) {
+                rotalpha4.pause();
+                a4 = false;
+            } else {
+                a4 = true;
+                rotalpha4.resume();
+                s1 = 1;
+                mtr.setUserData(s1);
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_5) {
+            if (a5) {
+                rotalpha5.pause();
+                a5 = false;
+            } else {
+                a5 = true;
+                rotalpha5.resume();
+                s1 = 1;
+                mtr.setUserData(s1);
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_6) {
+            if (a6) {
+                rotalpha6.pause();
+                a6 = false;
+            } else {
+                a6 = true;
+                rotalpha6.resume();
+                s1 = 1;
+                mtr.setUserData(s1);
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_7) {
+            if (a7) {
+                rotalpha7.pause();
+                a7 = false;
+            } else {
+                a7 = true;
+                rotalpha7.resume();
+                s1 = 1;
+                mtr.setUserData(s1);
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_8) {
+            if (a8) {
+                rotalpha8.pause();
+                a8 = false;
+            } else {
+                a8 = true;
+                rotalpha8.resume();
+                s1 = 1;
+                mtr.setUserData(s1);
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_9) {
+            if (a9) {
+                rotalpha9.pause();
+                a9 = false;
+            } else {
+                a9 = true;
+                rotalpha9.resume();
+                s1 = 1;
+                mtr.setUserData(s1);
+            }
+        }
 
-		if(e.getKeyCode() == KeyEvent.VK_1){
-			if (a1) {
-				rotalpha1.pause();
-				a1 = false;
-				s2 = 2;
-				mtr.setUserData(s2);
-			}	
-			else{
-				a1 =true;
-				rotalpha1.resume();
-				s2 = -2;
-				mtr.setUserData(s2);
-			}
-		}
-		if(e.getKeyCode() == KeyEvent.VK_2){
-			if (a2) {
-				rotalpha2.pause();
-				a2 = false;
-			}	
-			else{
-				a2 =true;
-				rotalpha2.resume();
-				s1 = 1;
-				mtr.setUserData(s1);
-			}
-		}
-		if(e.getKeyCode() == KeyEvent.VK_3){
-			if (a3) {
-				rotalpha3.pause();
-				a3 = false;
-			}	
-			else{
-				a3 =true;
-				rotalpha3.resume();
-				s1 = 1;
-				mtr.setUserData(s1);
-			}
-		}
-		if(e.getKeyCode() == KeyEvent.VK_4){
-			if (a4) {
-				rotalpha4.pause();
-				a4 = false;
-			}	
-			else{
-				a4 =true;
-				rotalpha4.resume();
-				s1 = 1;
-				mtr.setUserData(s1);
-			}
-		}
-		if(e.getKeyCode() == KeyEvent.VK_5){
-			if (a5) {
-				rotalpha5.pause();
-				a5 = false;
-			}	
-			else{
-				a5 =true;
-				rotalpha5.resume();
-				s1 = 1;
-				mtr.setUserData(s1);
-			}
-		}
-		if(e.getKeyCode() == KeyEvent.VK_6){
-			if (a6) {
-				rotalpha6.pause();
-				a6 = false;
-			}	
-			else{
-				a6 =true;
-				rotalpha6.resume();
-				s1 = 1;
-				mtr.setUserData(s1);
-			}
-		}
-		if(e.getKeyCode() == KeyEvent.VK_7){
-			if (a7) {
-				rotalpha7.pause();
-				a7 = false;
-			}	
-			else{
-				a7 =true;
-				rotalpha7.resume();
-				s1 = 1;
-				mtr.setUserData(s1);
-			}
-		}
-		if(e.getKeyCode() == KeyEvent.VK_8){
-			if (a8) {
-				rotalpha8.pause();
-				a8 = false;
-			}	
-			else{
-				a8 =true;
-				rotalpha8.resume();
-				s1 = 1;
-				mtr.setUserData(s1);
-			}
-		} 
-		if(e.getKeyCode() == KeyEvent.VK_9){
-			if (a9) {
-				rotalpha9.pause();
-				a9 = false;
-			}	
-			else{
-				a9 =true;
-				rotalpha9.resume();
-				s1 = 1;
-				mtr.setUserData(s1);
-			}
-		}
+    }
 
-	}
-		
-	public void keyTyped(KeyEvent e) {}
-	public void keyReleased(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 
+    public void keyReleased(KeyEvent e) {
+    }
 
-
-	@Override
+    @Override
     public void mouseClicked(MouseEvent event) {
 
         int x = event.getX();
@@ -671,315 +728,295 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         mouseVec.sub(point3d, center);
         mouseVec.normalize();
         pickTool.setShapeRay(point3d, mouseVec); // send a PickRay for intersection
-			
-		if (pickTool.pickClosest() != null) {
-			PickResult pickResult = pickTool.pickClosest();// obtain the closest hit
-			Node mtr = pickResult.getNode(PickResult.SHAPE3D); // originally a PRIMITIVE as a box
+
+        if (pickTool.pickClosest() != null) {
+            PickResult pickResult = pickTool.pickClosest();// obtain the closest hit
+            Node mtr = pickResult.getNode(PickResult.SHAPE3D); // originally a PRIMITIVE as a box
             Shape3D pick = (Shape3D) mtr; // cast to Shape3D
 
+            // Mercury
+            if ((int) mtr.getUserData() == 1) { // retrieve 'UserData'
+                alpha1.resume();
+                // alpha2.resume();
+                s1 = -1;
+                mtr.setUserData(s1); // set 'UserData' to a new value
+                y = true;
 
-			//Mercury
-			if ((int) mtr.getUserData() == 1) {            // retrieve 'UserData'
-				alpha1.resume();
-				//alpha2.resume();
-				s1 = -1;
-				mtr.setUserData(s1);                        // set 'UserData' to a new value
-				y = true;	
+            } else if ((int) mtr.getUserData() == -1) { // use 'UserData' as flag to switch color
+                alpha1.pause();
+                s1 = 1;
+                mtr.setUserData(s1); // reset 'UserData'
+                y = false;
 
-			}
-			else if((int) mtr.getUserData() == -1){                                         // use 'UserData' as flag to switch color
-				alpha1.pause();  
-				s1 = 1; 
-				mtr.setUserData(s1);                        // reset 'UserData'
-				y = false;
+            }
 
-			}
+            if ((int) mtr.getUserData() == 2) { // retrieve 'UserData'
+                rotalpha1.resume();
+                // alpha2.resume();
+                s2 = -2;
+                mtr.setUserData(s2); // set 'UserData' to a new value
+                a1 = true;
 
-			if ((int) mtr.getUserData() == 2) {            // retrieve 'UserData'
-				rotalpha1.resume();
-				//alpha2.resume();
-				s2 = -2;
-				mtr.setUserData(s2);                        // set 'UserData' to a new value
-				a1 = true;	
+            } else if ((int) mtr.getUserData() == -2) { // use 'UserData' as flag to switch color
+                rotalpha1.pause();
+                // alpha2.pause();
+                s2 = 2;
+                mtr.setUserData(s2); // reset 'UserData'
+                a1 = false;
 
-			}
-			else if((int) mtr.getUserData() == -2){                                         // use 'UserData' as flag to switch color
-				rotalpha1.pause();
-				//alpha2.pause();
-				s2 = 2;
-				mtr.setUserData(s2);                        // reset 'UserData'
-				a1 = false;
-				
-			}
+            }
 
-			//Venus
-			if ((int) mtr.getUserData() == 3) {            // retrieve 'UserData'
-				alpha2.resume();
-				//alpha2.resume();
-				v = true;	
-				s3 = -3;
-				mtr.setUserData(s3); 
-			}
-			else if((int) mtr.getUserData() == -3){                                         // use 'UserData' as flag to switch color
-				alpha2.pause();
-				//alpha2.pause();
-				s3 = 3;
-				mtr.setUserData(s3);                        // reset 'UserData'
-				v = false;
+            // Venus
+            if ((int) mtr.getUserData() == 3) { // retrieve 'UserData'
+                alpha2.resume();
+                // alpha2.resume();
+                v = true;
+                s3 = -3;
+                mtr.setUserData(s3);
+            } else if ((int) mtr.getUserData() == -3) { // use 'UserData' as flag to switch color
+                alpha2.pause();
+                // alpha2.pause();
+                s3 = 3;
+                mtr.setUserData(s3); // reset 'UserData'
+                v = false;
 
-			}
+            }
 
-			if ((int) mtr.getUserData() == 4) {            // retrieve 'UserData'
-				rotalpha2.resume();
-				//alpha2.resume();
-				s4 = -4;
-				mtr.setUserData(s4);                        // set 'UserData' to a new value
-				a2 = true;	
+            if ((int) mtr.getUserData() == 4) { // retrieve 'UserData'
+                rotalpha2.resume();
+                // alpha2.resume();
+                s4 = -4;
+                mtr.setUserData(s4); // set 'UserData' to a new value
+                a2 = true;
 
-			}
-			else if((int) mtr.getUserData() == -4){                                         // use 'UserData' as flag to switch color
-				rotalpha2.pause();
-				//alpha2.pause();
-				s4 = 4;
-				mtr.setUserData(s4);                        // reset 'UserData'
-				a2 = false;
-				
-			}
+            } else if ((int) mtr.getUserData() == -4) { // use 'UserData' as flag to switch color
+                rotalpha2.pause();
+                // alpha2.pause();
+                s4 = 4;
+                mtr.setUserData(s4); // reset 'UserData'
+                a2 = false;
 
-			//Earth
-			if ((int) mtr.getUserData() == 5) {            // retrieve 'UserData'
-				alpha3.resume();
-				s5 = -5;
-				//alpha2.resume();
-				mtr.setUserData(s5);                        // set 'UserData' to a new value
-				er = true;	
+            }
 
-			}
-			else if((int) mtr.getUserData() == -5){                                         // use 'UserData' as flag to switch color
-				alpha3.pause();
-				//alpha2.pause();
-				s5 = 5;
-				mtr.setUserData(s5);                        // reset 'UserData'
-				er = false;
+            // Earth
+            if ((int) mtr.getUserData() == 5) { // retrieve 'UserData'
+                alpha3.resume();
+                s5 = -5;
+                // alpha2.resume();
+                mtr.setUserData(s5); // set 'UserData' to a new value
+                er = true;
 
-			}
+            } else if ((int) mtr.getUserData() == -5) { // use 'UserData' as flag to switch color
+                alpha3.pause();
+                // alpha2.pause();
+                s5 = 5;
+                mtr.setUserData(s5); // reset 'UserData'
+                er = false;
 
-			if ((int) mtr.getUserData() == 6) {            // retrieve 'UserData'
-				rotalpha3.resume();
-				//alpha2.resume();
-				s6 = -6;
-				mtr.setUserData(s6);                        // set 'UserData' to a new value
-				a3 = true;	
+            }
 
-			}
-			else if((int) mtr.getUserData() == -6){                                         // use 'UserData' as flag to switch color
-				rotalpha3.pause();
-				//alpha2.pause();
-				s6 =6;
-				mtr.setUserData(s6);                        // reset 'UserData'
-				a3 = false;
-				
-			}
+            if ((int) mtr.getUserData() == 6) { // retrieve 'UserData'
+                rotalpha3.resume();
+                // alpha2.resume();
+                s6 = -6;
+                mtr.setUserData(s6); // set 'UserData' to a new value
+                a3 = true;
 
-			//mars
-			if ((int) mtr.getUserData() == 7) {            // retrieve 'UserData'
-				alpha4.resume();
-				//alpha2.resume();
-				s7 = -7;
-				mtr.setUserData(s7);                        // set 'UserData' to a new value
-				m = true;	
+            } else if ((int) mtr.getUserData() == -6) { // use 'UserData' as flag to switch color
+                rotalpha3.pause();
+                // alpha2.pause();
+                s6 = 6;
+                mtr.setUserData(s6); // reset 'UserData'
+                a3 = false;
 
-			}
-			else if((int) mtr.getUserData() == -7){                                         // use 'UserData' as flag to switch color
-				alpha4.pause();
-				//alpha2.pause();
-				s7 = 7;
-				mtr.setUserData(s7);                        // reset 'UserData'
-				m = false;
+            }
 
-			}
+            // mars
+            if ((int) mtr.getUserData() == 7) { // retrieve 'UserData'
+                alpha4.resume();
+                // alpha2.resume();
+                s7 = -7;
+                mtr.setUserData(s7); // set 'UserData' to a new value
+                m = true;
 
-			if ((int) mtr.getUserData() == 8) {            // retrieve 'UserData'
-				rotalpha4.resume();
-				//alpha2.resume();
-				s8 = -8;
-				mtr.setUserData(s8);                        // set 'UserData' to a new value
-				a4 = true;	
+            } else if ((int) mtr.getUserData() == -7) { // use 'UserData' as flag to switch color
+                alpha4.pause();
+                // alpha2.pause();
+                s7 = 7;
+                mtr.setUserData(s7); // reset 'UserData'
+                m = false;
 
-			}
-			else if((int) mtr.getUserData() == -8){                                         // use 'UserData' as flag to switch color
-				rotalpha4.pause();
-				//alpha2.pause();
-				s8 = 8;
-				mtr.setUserData(s8);                        // reset 'UserData'
-				a4 = false;
-				
-			}
+            }
 
-			//Jupiter
-			if ((int) mtr.getUserData() == 9) {            // retrieve 'UserData'
-				alpha5.resume();
-				//alpha2.resume();
-				s9 = -9;
-				mtr.setUserData(s9);                        // set 'UserData' to a new value
-				j = true;	
+            if ((int) mtr.getUserData() == 8) { // retrieve 'UserData'
+                rotalpha4.resume();
+                // alpha2.resume();
+                s8 = -8;
+                mtr.setUserData(s8); // set 'UserData' to a new value
+                a4 = true;
 
-			}
-			else if((int) mtr.getUserData() == -9){                                         // use 'UserData' as flag to switch color
-				alpha5.pause();
-				//alpha2.pause();
-				s9 = 9;
-				mtr.setUserData(s9);                        // reset 'UserData'
-				j = false;
+            } else if ((int) mtr.getUserData() == -8) { // use 'UserData' as flag to switch color
+                rotalpha4.pause();
+                // alpha2.pause();
+                s8 = 8;
+                mtr.setUserData(s8); // reset 'UserData'
+                a4 = false;
 
-			}
+            }
 
-			if ((int) mtr.getUserData() == 10) {            // retrieve 'UserData'
-				rotalpha5.resume();
-				//alpha2.resume();
-				s10 = -10;
-				mtr.setUserData(s10);                        // set 'UserData' to a new value
-				a5 = true;	
+            // Jupiter
+            if ((int) mtr.getUserData() == 9) { // retrieve 'UserData'
+                alpha5.resume();
+                // alpha2.resume();
+                s9 = -9;
+                mtr.setUserData(s9); // set 'UserData' to a new value
+                j = true;
 
-			}
-			else if((int) mtr.getUserData() == -10){                                         // use 'UserData' as flag to switch color
-				rotalpha5.pause();
-				//alpha2.pause();
-				s10 = 10;
-				mtr.setUserData(s10);                        // reset 'UserData'
-				a5 = false;
-				
-			}
+            } else if ((int) mtr.getUserData() == -9) { // use 'UserData' as flag to switch color
+                alpha5.pause();
+                // alpha2.pause();
+                s9 = 9;
+                mtr.setUserData(s9); // reset 'UserData'
+                j = false;
 
-			//Saturn
-			if ((int) mtr.getUserData() == 11) {            // retrieve 'UserData'
-				alpha6.resume();
-				//alpha2.resume();
-				s11 = -11;
-				mtr.setUserData(s11);                        // set 'UserData' to a new value
-				s = true;	
+            }
 
-			}
-			else if((int) mtr.getUserData() == -11){                                         // use 'UserData' as flag to switch color
-				alpha6.pause();
-				//alpha2.pause();
-				s11 = 11;
-				mtr.setUserData(s11);                        // reset 'UserData'
-				s = false;
+            if ((int) mtr.getUserData() == 10) { // retrieve 'UserData'
+                rotalpha5.resume();
+                // alpha2.resume();
+                s10 = -10;
+                mtr.setUserData(s10); // set 'UserData' to a new value
+                a5 = true;
 
-			}
+            } else if ((int) mtr.getUserData() == -10) { // use 'UserData' as flag to switch color
+                rotalpha5.pause();
+                // alpha2.pause();
+                s10 = 10;
+                mtr.setUserData(s10); // reset 'UserData'
+                a5 = false;
 
-			if ((int) mtr.getUserData() == 12) {            // retrieve 'UserData'
-				rotalpha6.resume();
-				//alpha2.resume();
-				s12 = -12;
-				mtr.setUserData(s12);                        // set 'UserData' to a new value
-				a6 = true;	
+            }
 
-			}
-			else if((int) mtr.getUserData() == -12){                                         // use 'UserData' as flag to switch color
-				rotalpha6.pause();
-				//alpha2.pause();
-				mtr.setUserData(12);                        // reset 'UserData'
-				a6 = false;
-				
-			}
+            // Saturn
+            if ((int) mtr.getUserData() == 11) { // retrieve 'UserData'
+                alpha6.resume();
+                // alpha2.resume();
+                s11 = -11;
+                mtr.setUserData(s11); // set 'UserData' to a new value
+                s = true;
 
-			//Uranus
-			if ((int) mtr.getUserData() == 13) {            // retrieve 'UserData'
-				alpha7.resume();
-				//alpha2.resume();
-				mtr.setUserData(-13);                        // set 'UserData' to a new value
-				u = true;	
+            } else if ((int) mtr.getUserData() == -11) { // use 'UserData' as flag to switch color
+                alpha6.pause();
+                // alpha2.pause();
+                s11 = 11;
+                mtr.setUserData(s11); // reset 'UserData'
+                s = false;
 
-			}
-			else if((int) mtr.getUserData() == -13){                                         // use 'UserData' as flag to switch color
-				alpha7.pause();
-				//alpha2.pause();
-				mtr.setUserData(13);                        // reset 'UserData'
-				u = false;
+            }
 
-			}
+            if ((int) mtr.getUserData() == 12) { // retrieve 'UserData'
+                rotalpha6.resume();
+                // alpha2.resume();
+                s12 = -12;
+                mtr.setUserData(s12); // set 'UserData' to a new value
+                a6 = true;
 
-			if ((int) mtr.getUserData() == 14) {            // retrieve 'UserData'
-				rotalpha7.resume();
-				//alpha2.resume();
-				mtr.setUserData(-14);                        // set 'UserData' to a new value
-				a7 = true;	
+            } else if ((int) mtr.getUserData() == -12) { // use 'UserData' as flag to switch color
+                rotalpha6.pause();
+                // alpha2.pause();
+                mtr.setUserData(12); // reset 'UserData'
+                a6 = false;
 
-			}
-			else if((int) mtr.getUserData() == -14){                                         // use 'UserData' as flag to switch color
-				rotalpha7.pause();
-				//alpha2.pause();
-				mtr.setUserData(14);                        // reset 'UserData'
-				a7 = false;
-				
-			}
+            }
 
-			//Neptune
-			if ((int) mtr.getUserData() == 15) {            // retrieve 'UserData'
-				alpha8.resume();
-				//alpha2.resume();
-				mtr.setUserData(-15);                        // set 'UserData' to a new value
-				n = true;	
+            // Uranus
+            if ((int) mtr.getUserData() == 13) { // retrieve 'UserData'
+                alpha7.resume();
+                // alpha2.resume();
+                mtr.setUserData(-13); // set 'UserData' to a new value
+                u = true;
 
-			}
-			else if((int) mtr.getUserData() == -15){                                         // use 'UserData' as flag to switch color
-				alpha8.pause();
-				//alpha2.pause();
-				mtr.setUserData(15);                        // reset 'UserData'
-				n = false;
+            } else if ((int) mtr.getUserData() == -13) { // use 'UserData' as flag to switch color
+                alpha7.pause();
+                // alpha2.pause();
+                mtr.setUserData(13); // reset 'UserData'
+                u = false;
 
-			}
+            }
 
-			if ((int) mtr.getUserData() == 16) {            // retrieve 'UserData'
-				rotalpha8.resume();
-				//alpha2.resume();
-				mtr.setUserData(-16);                        // set 'UserData' to a new value
-				a8 = true;	
+            if ((int) mtr.getUserData() == 14) { // retrieve 'UserData'
+                rotalpha7.resume();
+                // alpha2.resume();
+                mtr.setUserData(-14); // set 'UserData' to a new value
+                a7 = true;
 
-			}
-			else if((int) mtr.getUserData() == -16){                                         // use 'UserData' as flag to switch color
-				rotalpha8.pause();
-				//alpha2.pause();
-				mtr.setUserData(16);                        // reset 'UserData'
-				a8 = false;
-				
-			}
+            } else if ((int) mtr.getUserData() == -14) { // use 'UserData' as flag to switch color
+                rotalpha7.pause();
+                // alpha2.pause();
+                mtr.setUserData(14); // reset 'UserData'
+                a7 = false;
 
-			//Pluto
-			if ((int) mtr.getUserData() == 17) {            // retrieve 'UserData'
-				alpha9.resume();
-				//alpha2.resume();
-				mtr.setUserData(-17);                        // set 'UserData' to a new value
-				p = true;	
+            }
 
-			}
-			else if((int) mtr.getUserData() == -17){                                         // use 'UserData' as flag to switch color
-				alpha9.pause();
-				//alpha2.pause();
-				mtr.setUserData(17);                        // reset 'UserData'
-				p = false;
+            // Neptune
+            if ((int) mtr.getUserData() == 15) { // retrieve 'UserData'
+                alpha8.resume();
+                // alpha2.resume();
+                mtr.setUserData(-15); // set 'UserData' to a new value
+                n = true;
 
-			}
+            } else if ((int) mtr.getUserData() == -15) { // use 'UserData' as flag to switch color
+                alpha8.pause();
+                // alpha2.pause();
+                mtr.setUserData(15); // reset 'UserData'
+                n = false;
 
-			if ((int) mtr.getUserData() == 18) {            // retrieve 'UserData'
-				rotalpha9.resume();
-				//alpha2.resume();
-				mtr.setUserData(-18);                        // set 'UserData' to a new value
-				a9 = true;	
+            }
 
-			}
-			else if((int) mtr.getUserData() == -18){                                         // use 'UserData' as flag to switch color
-				rotalpha9.pause();
-				//alpha2.pause();
-				mtr.setUserData(18);                        // reset 'UserData'
-				a9 = false;
-				
-			}
-		} 
+            if ((int) mtr.getUserData() == 16) { // retrieve 'UserData'
+                rotalpha8.resume();
+                // alpha2.resume();
+                mtr.setUserData(-16); // set 'UserData' to a new value
+                a8 = true;
+
+            } else if ((int) mtr.getUserData() == -16) { // use 'UserData' as flag to switch color
+                rotalpha8.pause();
+                // alpha2.pause();
+                mtr.setUserData(16); // reset 'UserData'
+                a8 = false;
+
+            }
+
+            // Pluto
+            if ((int) mtr.getUserData() == 17) { // retrieve 'UserData'
+                alpha9.resume();
+                // alpha2.resume();
+                mtr.setUserData(-17); // set 'UserData' to a new value
+                p = true;
+
+            } else if ((int) mtr.getUserData() == -17) { // use 'UserData' as flag to switch color
+                alpha9.pause();
+                // alpha2.pause();
+                mtr.setUserData(17); // reset 'UserData'
+                p = false;
+
+            }
+
+            if ((int) mtr.getUserData() == 18) { // retrieve 'UserData'
+                rotalpha9.resume();
+                // alpha2.resume();
+                mtr.setUserData(-18); // set 'UserData' to a new value
+                a9 = true;
+
+            } else if ((int) mtr.getUserData() == -18) { // use 'UserData' as flag to switch color
+                rotalpha9.pause();
+                // alpha2.pause();
+                mtr.setUserData(18); // reset 'UserData'
+                a9 = false;
+
+            }
+        }
     }
-    
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -1004,5 +1041,5 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         // TODO Auto-generated method stub
 
     }
-	
+
 }
