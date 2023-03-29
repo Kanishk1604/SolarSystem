@@ -106,15 +106,15 @@ class export extends RingObjectsKS {
     private float aa;
     private float b;
     private float d;
-    SimpleUniverse su;
-    public export(String obj, Color3f c, float scale, float aa, float b, float d,SimpleUniverse su) { // identify object as "Ring1.obj"
+
+    public export(String obj, Color3f c, float scale, float aa, float b, float d) { 
+ 
         obj_name = obj;
         clr = c;
         scaling = scale;
         this.aa = aa;
         this.b = b;
         this.d = d;
-        this.su = su;
     }
 
     protected Node create_Object() {
@@ -133,24 +133,24 @@ class export extends RingObjectsKS {
             System.exit(1);
         }
         objBG = s.getSceneGroup();
-        Appearance a = CommonsKS.obj_Appearance(clr); // adding the appearance
+        Appearance a = CommonsKS.obj_Appearance(CommonsKS.Orange); // adding the appearance
         a.setTexture(setTexture()); // set the texture to the appearance
         Shape3D sh = (Shape3D) objBG.getChild(0);
         sh.setAppearance(a);
         CollisionDetectShapes cd = new CollisionDetectShapes(sh);
-		cd.setSchedulingBounds(CommonsKS.twentyBS);        // detect column's collision
-        
+        cd.setSchedulingBounds(CommonsKS.twentyBS); // detect column's collision
+
         Transform3D r1 = new Transform3D();
         r1.setTranslation(new Vector3f((float) aa, (float) b, (float) d)); // 0,0.06f,0
         r1.setScale(scaling); // 0.35
         TransformGroup R1 = new TransformGroup(r1);
-		R1.addChild(cd);
+        // R1.addChild(cd);
         R1.addChild(objBG);
         return R1;
     }
 
     private Texture setTexture() {
-        String filename = "C:\\solarsystem\\soalr\\image\\"+ obj_name + ".jpg";                                                                                                 // texture file
+        String filename = "C:\\solarsystem\\soalr\\image\\" + obj_name + ".jpg"; 
         TextureLoader loader = new TextureLoader(filename, null);
         ImageComponent2D image = loader.getImage();
         if (image == null)
@@ -183,7 +183,7 @@ class Sun extends RingObjectsKS {
         this.d = d;
         // alpha = new Alpha(-1,5000);
 
-        String file = "C:\\solarsystem\\soalr\\image\\\\sun.jpg";
+        String file = "C:\\solarsystem\\soalr\\image\\sun.jpg";
         TextureLoader loader = new TextureLoader(file, null);
         ImageComponent2D image = loader.getImage();
         if (image == null)
@@ -205,7 +205,7 @@ class Sun extends RingObjectsKS {
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
 
-        Sphere s =  new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        Sphere s =  new Sphere(0.12f, Primitive.GENERATE_TEXTURE_COORDS, 30, app);
         R1.addChild(s);
         // s.setUserData(1);
         // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
@@ -256,7 +256,7 @@ class Mercury extends RingObjectsKS {
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
 
-        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_TEXTURE_COORDS, 30, app);
         R1.addChild(s);
         s.setUserData(1);
         // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
@@ -307,7 +307,7 @@ class Venus extends RingObjectsKS {
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
 
-        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_TEXTURE_COORDS, 30, app);
         R1.addChild(s);
         s.setUserData(2);
         // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
@@ -357,7 +357,7 @@ class Earth extends RingObjectsKS {
         // app = CommonsKS.obj_Appearance(CommonsKS.White);
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
-        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_TEXTURE_COORDS, 30, app);
         R1.addChild(s);
         s.setUserData(3);
         // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
@@ -369,7 +369,7 @@ class Earth extends RingObjectsKS {
     }
 
 }
-
+// /"C:\\solarsystem\\soalr\\image\\\\mars.jpg"
 class Mars extends RingObjectsKS {
     protected BranchGroup objBG; // load external object to 'objBG'
     Color3f clr;
@@ -378,9 +378,9 @@ class Mars extends RingObjectsKS {
     private float d;
     Texture t;
     TransparencyAttributes ta;
-    protected Appearance app;
+    protected Appearance app = new Appearance();
 
-    public Mars(Color3f c, float scale, float d) { // identify object as "Mars.obj"
+    public Mars(Color3f c, float scale, float d) { // identify object as "Earth.obj"
         clr = c;
         scaling = scale;
         this.d = d;
@@ -394,7 +394,7 @@ class Mars extends RingObjectsKS {
         t = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(),
                 image.getHeight());
         t.setImage(0, image);
-        ta = new TransparencyAttributes(TransparencyAttributes.NONE, 1f);
+        ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
 
     }
 
@@ -404,13 +404,12 @@ class Mars extends RingObjectsKS {
         r1.setScale(scaling); // 0.35
         TransformGroup R1 = new TransformGroup(r1);
 
-        app = CommonsKS.obj_Appearance(CommonsKS.White);
+        // app = CommonsKS.obj_Appearance(CommonsKS.White);
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
-
-        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_TEXTURE_COORDS, 30, app);
         R1.addChild(s);
-        s.setUserData(4);
+        s.setUserData(3);
         // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
         return R1;
     }
@@ -420,6 +419,7 @@ class Mars extends RingObjectsKS {
     }
 
 }
+ 
 
 class Jupiter extends RingObjectsKS {
     protected BranchGroup objBG; // load external object to 'objBG'
@@ -459,7 +459,7 @@ class Jupiter extends RingObjectsKS {
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
 
-        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_TEXTURE_COORDS, 30, app);
         R1.addChild(s);
         s.setUserData(5);
         // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
@@ -510,7 +510,7 @@ class Saturn extends RingObjectsKS {
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
 
-        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_TEXTURE_COORDS, 30, app);
         R1.addChild(s);
         s.setUserData(6);
         // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
@@ -561,7 +561,7 @@ class Uranus extends RingObjectsKS {
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
 
-        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_TEXTURE_COORDS, 30, app);
         R1.addChild(s);
         s.setUserData(7);
         // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
@@ -612,7 +612,7 @@ class Neptune extends RingObjectsKS {
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
 
-        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_TEXTURE_COORDS, 30, app);
         R1.addChild(s);
         s.setUserData(8);
         // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
@@ -663,7 +663,7 @@ class Pluto extends RingObjectsKS {
         app.setTexture(t); // setting texture
         app.setTransparencyAttributes(ta); // sets transparency
 
-        Sphere s = new Sphere(0.12f, Primitive.GENERATE_NORMALS, 30, app);
+        Sphere s = new Sphere(0.12f, Primitive.GENERATE_TEXTURE_COORDS, 30, app);
         R1.addChild(s);
         s.setUserData(9);
 
@@ -738,24 +738,39 @@ class rocket extends RingObjectsKS	{
 	private TransformGroup objSH6 = new TransformGroup();
 	private TransformGroup objTG = new TransformGroup();
 	private TransformGroup objTG1 = new TransformGroup();
-	private void createContent(Alpha alpha) {
-		TransformGroup baseTG = new TransformGroup();
-		baseTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-		baseTG.addChild(objTG);
+	private TransformGroup objTG2 = new TransformGroup();
+	private BranchGroup objBG = new BranchGroup();
+	public static RotationInterpolator rotate_half(int r_num, TransformGroup rotTG,Alpha alpha) {
 
-		Transform3D axisPosition = new Transform3D();
-		//axisPosition.rotZ(Math.PI / 2.0);
-		PositionInterpolator positionInterpol = new PositionInterpolator(alpha, baseTG, axisPosition,-10f, 10f);
-		positionInterpol.setSchedulingBounds(CommonsKS.hundredBS);
-		objTG1.addChild(baseTG);
-		objTG1.addChild(positionInterpol);
-		}
+		rotTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		Transform3D yAxis = new Transform3D();
+		AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI/2);	//rotate around z-axis
+		 yAxis.setRotation(axis);
+		yAxis.rotZ(Math.PI/6);
+		// alpha = new Alpha(-1, r_num);		//speed = 5000 ms
+//		Alpha rotationAlpha = new Alpha(-1, Alpha.INCREASING_ENABLE| Alpha.DECREASING_ENABLE, 0, 0, 5000, 2500, 200, 5000, 2500, 200);
+//      RotationInterpolator rot_beh = new RotationInterpolator(rotationAlpha, rotTG, yAxis, -(float) Math.PI/2, (float) Math.PI/2);
+		RotationInterpolator rot_beh = new RotationInterpolator(
+				alpha, rotTG, yAxis, -(float) Math.PI, (float) Math.PI /5.0f);
+		rot_beh.setSchedulingBounds(CommonsKS.hundredBS);
+		return rot_beh;
+	}
+	public BranchGroup rings()	{
+
+		BranchGroup objBG1 = new BranchGroup();
+		TransformGroup tran1 = new TransformGroup();
+		objBG1.addChild(tran1);
+		tran1.addChild(objTG);
+		Alpha alpha1 = new Alpha(1, 80000);
+		objBG1.addChild(rotate_half(10000,tran1, alpha1));		//rotating behavior of the 2ndring
+		return objBG1;
+	}
 	public rocket(Alpha alpha)	{
 		Transform3D translation = new Transform3D();           
-		translation.setTranslation(new Vector3f(0f, 0f, 1f));		//vector for translation
+		translation.setTranslation(new Vector3f(0f, 0f, 4.5f));		//vector for translation
 
 		Transform3D scaler = new Transform3D();
-		scaler.setScale(1);			//vector for scaling
+		scaler.setScale(0.1);			//vector for scaling
 
         Transform3D trfm = new Transform3D(); 
 		trfm.mul(translation); 							// apply translation
@@ -776,12 +791,13 @@ class rocket extends RingObjectsKS	{
 		objTG.addChild(objSH5);
 		objTG.addChild(objSH6);
 		
-		createContent(alpha);
+		//createContent(alpha);
 	}
-	protected Node create_Object()	{                            // attach "FanSwitch" to 'objTG'
-		return objTG1;                                      // use 'objTG' to attach "FanSwitch" to the previous TG
+	protected Node create_Object()	{                            
+		
+		return objBG;                               
 	}
 	public Node position_Object() {
-		return objTG1;
+		return rings();
 	}
 }
