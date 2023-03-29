@@ -504,15 +504,17 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 
         pickTool = new PickTool(sceneBG);
         pickTool.setMode(PickTool.GEOMETRY);
-
+        BranchGroup f = new BranchGroup();
 		 su = new SimpleUniverse(canvas);    // create a SimpleUniverse
 		CommonsKS.define_Viewer(su, new Point3d(4.5d, 0.0d, 1.0d));
-		// CommonsKS.define_Viewer(su, new Point3d(0.0d, 0.0d, 0.0d));
+        TransformGroup g = CommonsKS.gh();
+		f.addChild(g);
+		f.compile();
 		enableAudio(su);                                   // enable audio
 		sceneBG.addChild(CommonsKS.key_Navigation(su));     // allow key navigation
 		sceneBG.compile();		                           // optimize the BranchGroup
 		su.addBranchGraph(sceneBG);                        // attach the scene to SimpleUniverse
-
+        su.addBranchGraph(f);
 		setLayout(new BorderLayout());
 		add("Center", canvas);
 		frame.setSize(800, 800);                           // set the size of the JFrame
