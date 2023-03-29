@@ -34,7 +34,8 @@ public class CommonsKS extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static JFrame frame;
-	
+    private static SoundUtilityJOAL soundJOAL;               // needed for sound
+	private static CollisionDetectShapes cd;
 	public final static Color3f Red = new Color3f(1.0f, 0.0f, 0.0f);
 	public final static Color3f Green = new Color3f(0.0f, 1.0f, 0.0f);
 	public final static Color3f Blue = new Color3f(0.0f, 0.0f, 1.0f);
@@ -74,8 +75,8 @@ public class CommonsKS extends JPanel {
 	public static RotationInterpolator rotating(int speed, TransformGroup rotTG,Alpha alpha,float a) {
 		rotTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		Transform3D zAxis = new Transform3D();
-		// AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI);	//rotate around z-axis
-		// zAxis.setRotation(axis);
+		AxisAngle4f axis = new AxisAngle4f(0.0f,1.0f,0.0f,(float) Math.PI);	//rotate around z-axis
+		zAxis.setRotation(axis);
 		zAxis.rotZ(Math.PI/6);
 		//zAxis.setTranslation(new Vector3d(0.46f, 0.68f, 0f));
 		zAxis.setTranslation(new Vector3d(0f,0.0f, a));
@@ -113,6 +114,21 @@ public class CommonsKS extends JPanel {
 	public static BranchGroup add_Lights(Color3f clr, int p_num) {
 		BranchGroup lightBG = new BranchGroup();
 		Point3f atn = new Point3f(0.5f, 0.0f, 0.0f);		
+		PointLight ptLight;
+		float adjt = 1f;
+		for (int i = 0; (i < p_num) && (i < 2); i++) {
+			if (i > 0) 
+				adjt = -1f; 
+			ptLight = new PointLight(clr, new Point3f(3.0f * adjt, 1.0f, 3.0f  * adjt), atn);
+			ptLight.setInfluencingBounds(hundredBS);
+			lightBG.addChild(ptLight);
+		}
+		return lightBG;
+	}
+
+	public static BranchGroup add_Ligh(Color3f clr, int p_num) {
+		BranchGroup lightBG = new BranchGroup();
+		Point3f atn = new Point3f(0.0f, 0.0f, 0.0f);		
 		PointLight ptLight;
 		float adjt = 1f;
 		for (int i = 0; (i < p_num) && (i < 2); i++) {
@@ -198,8 +214,8 @@ public class CommonsKS extends JPanel {
 		Transform3D translation = new Transform3D();           
 		translation.setTranslation(new Vector3f(x, y, z));		//vector for translation
 		Shape3D sh = (Shape3D) objBG.getChild(0);
-		// CollisionDetectShapes cd = new CollisionDetectShapes(sh,);
-		// cd.setSchedulingBounds(CommonsKS.twentyBS);        // detect column's collision
+		cd = new CollisionDetectShapes(sh);
+		cd.setSchedulingBounds(CommonsKS.twentyBS);        // detect column's collision
 		Transform3D scaler = new Transform3D();
 		scaler.setScale(scale);			//vector for scaling
 		// sh.setUserData(1);
@@ -209,10 +225,24 @@ public class CommonsKS extends JPanel {
 		                              
 		TransformGroup objTG = new TransformGroup(trfm);
 		objTG.addChild(objBG);
-		// objTG.addChild(cd);
+		objTG.addChild(cd);
+		// soundJOAL.play("crash");
+		
+
 		BranchGroup objBG1 = new BranchGroup();
 		objBG1.addChild(objTG);
 		return objBG1;
+	}
+
+	public static  TransformGroup gh(){
+		Transform3D trfm = new Transform3D();           
+		trfm.setTranslation(new Vector3f(10f,10f,10f));
+		TransformGroup objTG = null;
+		if(cd.getCr() == true){
+			soundJOAL.play("crash");
+			objTG  = new TransformGroup(trfm);
+		}
+		return objTG;
 	}
 	public static void main(String[] args) {
 		frame = new JFrame("KS's Common File");            
