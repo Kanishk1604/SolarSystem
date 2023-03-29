@@ -21,7 +21,7 @@ import org.jogamp.vecmath.*;
 import org.jogamp.java3d.utils.universe.Viewer;
 import java.net.URL;
 
-import org.jdesktop.j3d.examples.sound.PointSoundBehavior;
+import solar.PointSoundBehavior;
 import org.jdesktop.j3d.examples.sound.audio.JOALMixer;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -70,7 +70,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	private static RingObjectsKS pluto;
 	
 
-	private static RingObjectsKS[] Object3D = new RingObjectsKS[28];
+	private static RingObjectsKS[] Object3D = new RingObjectsKS[404];
 	private static boolean space = true;
 
 	private static boolean y = true;
@@ -92,7 +92,17 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	private static boolean a7 = true;
 	private static boolean a8 = true;
 	private static boolean a9 = true;
-	public static boolean ON = true;
+
+
+	public static boolean ON1 = false;
+	public static boolean ON2 = false;
+	public static boolean ON3 = false;
+	public static boolean ON4 = false;
+	public static boolean ON5 = false;
+	public static boolean ON6 = false;
+	public static boolean ON7 = false;
+	public static boolean ON8 = false;
+	public static boolean ON9 = false;
 
 	public static int s1 = -1;
 	public static int s2 = -2;
@@ -120,7 +130,18 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	// public static TransformGroup rocket  = new TransformGroup();
 	private static Sphere mtr;
 	public static Alpha get_Alpha() { return alpha1; };    // NOTE: keep for future use 
-	private static PointSound ps;
+	
+	 private static SoundUtilityJOAL soundJOAL;               // for A5: needed for sound
+    
+    private static PointSound ps;
+    private static PointSound ps2;
+    private static PointSound ps3;
+    private static PointSound ps4;
+    private static PointSound ps5;
+    private static PointSound ps6;
+    private static PointSound ps7;
+    private static PointSound ps8;
+    private static PointSound ps9;
 
 	public static BranchGroup create_Scene() {
         Transform3D scaler = new Transform3D(); // 4x4 matrix for scaling
@@ -151,8 +172,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         earth = new Earth(CommonsKS.White, (float) 1.9, (float) 3); // create the external object
         mars = new Mars(CommonsKS.White, (float) 1.6, (float) 4); // create the external object
         jupiter = new Jupiter(CommonsKS.White, (float) 3.4, (float) 5); // create the external object
-        saturn = new export("Saturn", CommonsKS.White, (float) 0.7, (float) 0.0, (float) 0.0f, (float) 6,su); // create
-        uranus = new export("Uranus", CommonsKS.White, (float) 1.5, (float) 0.0, (float) 0.0f, (float) 8,su); // create
+        saturn = new export("Saturn", CommonsKS.White, (float) 0.7, (float) 0.0, (float) 0.0f, (float) 6); // create
+        uranus = new Uranus(CommonsKS.White, (float) 2.7, (float) 7); // create the external object 
         neptune = new Neptune(CommonsKS.White, (float) 2.3, (float) 8); // create the external object
         pluto = new Pluto(CommonsKS.White, (float) 0.7, (float) 9); // create the external object
 
@@ -183,15 +204,105 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         Object3D[25] = new Meteor("meteor11",s17, CommonsKS.Grey,0f,2.66f,8.7f);
         Object3D[26] = new Meteor("meteor12",s18, CommonsKS.Grey,0f,2.66f,8.9f);	
 		
-		Object3D[27] = new rocket(alpha10);
+		// Object3D[27] = new rocket(alpha10);
 		TransformGroup met = new TransformGroup();
 
-		 //meteors
-		for(int i=9;i<28;i++) {
-			met.addChild(Object3D[i].position_Object());
-		}
+        float aa = 0;
+        float cc = 3.5f;
+
+        TransformGroup metbelt = new TransformGroup();
+
+        for (int i = 28; i < 118; i++) {
+
+            Transform3D rotator = new Transform3D(); // 4x4 matrix for rotation
+            rotator.rotZ(Math.PI / 6); // 2.8
+            Transform3D trfm = new Transform3D(); // 4x4 matrix for composition
+
+            trfm.mul(rotator); // apply rotation first
+
+            metbelt = new TransformGroup(trfm);
+
+            cc = (float) Math.cos(Math.PI / 180 * (90 + 4 * i)) * 4.5f;
+            aa = (float) Math.sin(Math.PI / 180 * (90 + 4 * i)) * 4.5f;
+
+            Object3D[i] = new Meteor("meteor10", s7, CommonsKS.Grey, aa, 0f, cc);
+        }
+
+        for (int i = 118; i < 208; i++) {
+
+            Transform3D rotator = new Transform3D(); // 4x4 matrix for rotation
+            rotator.rotZ(Math.PI / 6); // 2.8
+            Transform3D trfm = new Transform3D(); // 4x4 matrix for composition
+
+            trfm.mul(rotator); // apply rotation first
+
+            metbelt = new TransformGroup(trfm);
+
+            cc = (float) Math.cos(Math.PI / 180 * (90 + 4 * i)) * 4.5f;
+            aa = (float) Math.sin(Math.PI / 180 * (90 + 4 * i)) * 4.5f;
+
+            Object3D[i] = new Meteor("meteor3", s7, CommonsKS.Grey, (float) (aa - 0.1f), 0.1f, cc);
+        }
+        for (int i = 208; i < 298; i++) {
+
+            Transform3D rotator = new Transform3D(); // 4x4 matrix for rotation
+            rotator.rotZ(Math.PI / 6); // 2.8
+            Transform3D trfm = new Transform3D(); // 4x4 matrix for composition
+
+            trfm.mul(rotator); // apply rotation first
+
+            metbelt = new TransformGroup(trfm);
+
+            cc = (float) Math.cos(Math.PI / 180 * (90 + 4 * i)) * 4.5f;
+            aa = (float) Math.sin(Math.PI / 180 * (90 + 4 * i)) * 4.5f;
+
+            Object3D[i] = new Meteor("meteor5", s7, CommonsKS.Grey, (float) (aa - 0.2f), 0.15f, (float) (cc + 0.1f));
+        }
+
+        for (int i = 298; i < 388; i++) {
+
+            Transform3D rotator = new Transform3D(); // 4x4 matrix for rotation
+            rotator.rotZ(Math.PI / 6); // 2.8
+            Transform3D trfm = new Transform3D(); // 4x4 matrix for composition
+
+            trfm.mul(rotator); // apply rotation first
+
+            metbelt = new TransformGroup(trfm);
+
+            cc = (float) Math.cos(Math.PI / 180 * (90 + 4 * i)) * 4.5f;
+            aa = (float) Math.sin(Math.PI / 180 * (90 + 4 * i)) * 4.5f;
+
+            Object3D[i] = new Meteor("meteor7", s7, CommonsKS.Grey, (float) (aa - 0.3f), 0.2f, (float) (cc + 0.2f));
+        }
+        Object3D[27] = new rocket(alpha10);
+        // TransformGroup met = new TransformGroup();
+
+        // meteors
+        for (int i = 9; i < 28; i++) {
+            met.addChild(Object3D[i].position_Object());
+        }
+
 		
+		Object3D[388] = new Meteor("meteor7", s7, CommonsKS.Grey, 0f, 1.16f, 4.1f);
+        Object3D[389] = new Meteor("meteor8", s8, CommonsKS.Grey, 0f, 1.16f, 4.1f);
+        Object3D[390] = new Meteor("meteor7", s7, CommonsKS.Grey, 0.1f, 1.17f, 4.3f);
+        Object3D[391] = new Meteor("meteor8", s8, CommonsKS.Grey, 0.1f, 1.17f, 4.2f);
+        Object3D[392] = new Meteor("meteor7", s7, CommonsKS.Grey, 0.2f, 1.18f, 4.3f);
+        Object3D[393] = new Meteor("meteor8", s8, CommonsKS.Grey, 0.2f, 1.19f, 4.1f);
+        Object3D[394] = new Meteor("meteor7", s7, CommonsKS.Grey, 0.3f, 1.19f, 4.3f);
+        Object3D[395] = new Meteor("meteor8", s8, CommonsKS.Grey, 0.3f, 1.20f, 4.3f);
+        Object3D[396] = new Meteor("meteor7", s7, CommonsKS.Grey, 0.4f, 1.20f, 4.5f);
+        Object3D[397] = new Meteor("meteor8", s8, CommonsKS.Grey, 0.5f, 1.21f, 4.2f);
+        Object3D[398] = new Meteor("meteor7", s7, CommonsKS.Grey, 0.5f, 1.21f, 4.1f);
+        Object3D[399] = new Meteor("meteor8", s8, CommonsKS.Grey, 0.6f, 1.22f, 4.3f);
+        Object3D[400] = new Meteor("meteor7", s7, CommonsKS.Grey, 0.6f, 1.23f, 4.3f);
+        Object3D[401] = new Meteor("meteor8", s8, CommonsKS.Grey, 0.7f, 1.24f, 4.5f);
+        Object3D[402] = new Meteor("meteor7", s7, CommonsKS.Grey, 0.7f, 1.23f, 4.3f);
+        Object3D[403] = new Meteor("meteor8", s8, CommonsKS.Grey, 0.8f, 1.25f, 4.2f);
 		
+        for (int i = 28; i < 404; i++) {
+            metbelt.addChild(Object3D[i].position_Object());
+        }
 		TransformGroup sunTG= new TransformGroup();
 
 		TransformGroup mercuryTG = new TransformGroup();
@@ -226,26 +337,26 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		TransformGroup str = new TransformGroup();
 
 
-		alpha1 = new Alpha(-1, 3500);
-        alpha2 = new Alpha(-1, 6000);
-        alpha3 = new Alpha(-1, 9000);
-        alpha4 = new Alpha(-1, 11000);
-        alpha5 = new Alpha(-1, 20000);
-        alpha6 = new Alpha(-1, 25000);
-        alpha7 = new Alpha(-1, 31000);
-        alpha8 = new Alpha(-1, 42000);
-        alpha9 = new Alpha(-1, 51000);
-        alpha10 = new Alpha(-1, 500);
+        alpha1 = new Alpha(-1, 17000);
+        alpha2 = new Alpha(-1, 30000);
+        alpha3 = new Alpha(-1, 45000);
+        alpha4 = new Alpha(-1, 70000);
+        alpha5 = new Alpha(-1, 100000);
+        alpha6 = new Alpha(-1, 250000);
+        alpha7 = new Alpha(-1, 370000);
+        alpha8 = new Alpha(-1, 420000);
+        alpha9 = new Alpha(-1, 510000);
+        alpha10 = new Alpha(-1, 5000);
 
-		rotalpha1 = new Alpha(-1, 1500);
-        rotalpha2 = new Alpha(-1, 3000);
-        rotalpha3 = new Alpha(-1, 4500);
-        rotalpha4 = new Alpha(-1, 5000);
-        rotalpha5 = new Alpha(-1, 10500);
-        rotalpha6 = new Alpha(-1, 11000);
-        rotalpha7 = new Alpha(-1, 17000);
-        rotalpha8 = new Alpha(-1, 21000);
-        rotalpha9 = new Alpha(-1, 25000);
+        rotalpha1 = new Alpha(-1, 7000);
+        rotalpha2 = new Alpha(-1, 15000);
+        rotalpha3 = new Alpha(-1, 24000);
+        rotalpha4 = new Alpha(-1, 29000);
+        rotalpha5 = new Alpha(-1, 55000);
+        rotalpha6 = new Alpha(-1, 70000);
+        rotalpha7 = new Alpha(-1, 85000);
+        rotalpha8 = new Alpha(-1, 105000);
+        rotalpha9 = new Alpha(-1, 125000);
 
 
 		sunTG.addChild(sun.position_Object());     
@@ -280,7 +391,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		saturnTG.addChild(CommonsKS.rotate_Behavior(5000,saturnTG,alpha6));
 		//saturnTG2.addChild(CommonsKS.rotating(400, saturnTG2,rotalpha6,(float)6));             
 
-		uranus = new export("Uranus", CommonsKS.White, (float) 1.4, (float) 0.0, (float) 0.0f, (float) 8,su); // create
+		// uranus = new export("Uranus", CommonsKS.White, (float) 1.4, (float) 0.0, (float) 0.0f, (float) 8,su); // create
 		uranusTG.addChild(uranus.position_Object()); // addding child ring1
         // uranusTG2.addChild(uranus.position_Object()); // addding child ring1
         uranusTG.addChild(CommonsKS.rotate_Behavior(30000, uranusTG, alpha7));
@@ -311,6 +422,16 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		
 		// mercuryTG.addChild(r1T);
 		
+        mercuryTG.addChild(pointSound());
+        venusTG.addChild(pointSound2());
+        earthTG.addChild(pointSound3());
+        marsTG.addChild(pointSound4());
+        jupiterTG.addChild(pointSound5());
+        saturnTG.addChild(pointSound6());
+        uranusTG.addChild(pointSound7());
+        neptuneTG.addChild(pointSound8());
+        plutoTG.addChild(pointSound9());
+
 		R1.addChild(mercuryTG);
 		R1.addChild(venusTG);
 		R1.addChild(earthTG);
@@ -360,12 +481,15 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		
 	BoundingSphere b = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), Double.MAX_VALUE);
 		sceneBG.addChild(cir);
-		R1.addChild(pointSound());
+		
 		sceneBG.addChild(R1);
 		sceneBG.addChild(sceneTG);
 		sceneBG.addChild(str);
 		sceneBG.addChild(met);
+        sceneBG.addChild(metbelt);
 		sceneBG.addChild(CommonsKS.add_Lights(CommonsKS.White, 1));	
+		// sceneBG.addChild(CommonsKS.add_Ligh(CommonsKS.White, 1));	
+
 		// sceneBG.addChild(CommonsKS.rotate_Behavior(6000, sceneTG,alpha));
 		sceneBG.addChild(CommonsKS.create_BK(CommonsKS.Grey, b));		//creating background
 		
@@ -394,7 +518,9 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		frame.setSize(800, 800);                           // set the size of the JFrame
 		frame.setVisible(true);
 	}
-
+    public Assignment3KS(Canvas3D canvas3D) {
+        canvas = canvas3D; 
+    }
     public static void main(String[] args) {
 		frame = new JFrame("KS's Assignment3");                   // NOTE: change XY to student's initials
 		frame.getContentPane().add(new Assignment3KS(create_Scene()));  // create an instance of the class
@@ -418,49 +544,157 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 
     private static PointSound pointSound() {
         URL url = null;
-        String filename = "C:\\lab6\\lab6\\src\\codesKS280\\magic_bells.wav";
+        String filename = "C:\\solarsystem\\soalr\\image\\magic_bells.wav";
         try {
             url = new URL("file", "localhost", filename);
         } catch (Exception e) {
             System.out.println("Can't open " + filename);
         }
         ps = new PointSound();                    // create and position a point sound
+        ps.setEnable(false);
+        ps.setInitialGain(0.1f);
         PointSoundBehavior player = new PointSoundBehavior(ps, url, new Point3f(0.0f, 0.0f, 0.0f));
-        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.9));
+        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.09));
 		ps.setCapability(PointSound.ALLOW_ENABLE_WRITE);
         return ps;
     }
 
 	private static PointSound pointSound2() {
         URL url = null;
-        String filename = "C:\\lab6\\lab6\\src\\codesKS280\\magic_bells.wav";
+        String filename = "C:\\solarsystem\\soalr\\image\\VenusSound.wav";
         try {
             url = new URL("file", "localhost", filename);
         } catch (Exception e) {
             System.out.println("Can't open " + filename);
         }
-        ps = new PointSound();                    // create and position a point sound
-        PointSoundBehavior player = new PointSoundBehavior(ps, url, new Point3f(0.0f, 0.0f, 0.0f));
+        ps2 = new PointSound();                    // create and position a point sound
+        ps2.setEnable(false);
+        ps2.setInitialGain(0.1f);
+        PointSoundBehavior player = new PointSoundBehavior(ps2, url, new Point3f(0.0f, 0.0f, 0.0f));
         player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 2));
-		ps.setCapability(PointSound.ALLOW_ENABLE_WRITE);
-        return ps;
+		ps2.setCapability(PointSound.ALLOW_ENABLE_WRITE);
+        return ps2;
     }
 
 	private static PointSound pointSound3() {
         URL url = null;
-        String filename = "C:\\lab6\\lab6\\src\\codesKS280\\magic_bells.wav";
+        String filename = "C:\\solarsystem\\soalr\\image\\EarthSound.wav";
         try {
             url = new URL("file", "localhost", filename);
         } catch (Exception e) {
             System.out.println("Can't open " + filename);
         }
-        ps = new PointSound();                    // create and position a point sound
-        PointSoundBehavior player = new PointSoundBehavior(ps, url, new Point3f(0.0f, 0.0f, 0.0f));
+        ps3 = new PointSound();                    // create and position a point sound
+        ps3.setEnable(false);
+        ps3.setInitialGain(0.1f);
+        PointSoundBehavior player = new PointSoundBehavior(ps3, url, new Point3f(0.0f, 0.0f, 0.0f));
         player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
-		ps.setCapability(PointSound.ALLOW_ENABLE_WRITE);
-        return ps;
+		ps3.setCapability(PointSound.ALLOW_ENABLE_WRITE);
+        return ps3;
+    }
+
+	private static PointSound pointSound4() {
+        URL url = null;
+        String filename = "C:\\solarsystem\\soalr\\image\\MarsSound.wav";
+        try {
+            url = new URL("file", "localhost", filename);
+        } catch (Exception e) {
+            System.out.println("Can't open " + filename);
+        }
+        ps4 = new PointSound();                    // create and position a point sound
+        ps4.setEnable(false);
+        ps4.setInitialGain(0.1f);
+        PointSoundBehavior player = new PointSoundBehavior(ps4, url, new Point3f(0.0f, 0.0f, 0.0f));
+        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
+		ps4.setCapability(PointSound.ALLOW_ENABLE_WRITE);
+        return ps4;
+    }
+
+	private static PointSound pointSound5() {
+        URL url = null;
+        String filename = "C:\\solarsystem\\soalr\\image\\JupiterSound.wav";
+        try {
+            url = new URL("file", "localhost", filename);
+        } catch (Exception e) {
+            System.out.println("Can't open " + filename);
+        }
+        ps5 = new PointSound();                    // create and position a point sound
+        ps5.setEnable(false);
+        ps5.setInitialGain(0.1f);
+        PointSoundBehavior player = new PointSoundBehavior(ps5, url, new Point3f(0.0f, 0.0f, 0.0f));
+        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
+		ps5.setCapability(PointSound.ALLOW_ENABLE_WRITE);
+        return ps5;
+    }
+
+	private static PointSound pointSound6() {
+        URL url = null;
+        String filename = "C:\\solarsystem\\soalr\\image\\SaturnSound.wav";
+        try {
+            url = new URL("file", "localhost", filename);
+        } catch (Exception e) {
+            System.out.println("Can't open " + filename);
+        }
+        ps6 = new PointSound();                    // create and position a point sound
+        ps6.setEnable(false);
+        ps6.setInitialGain(0.1f);
+        
+        PointSoundBehavior player = new PointSoundBehavior(ps6, url, new Point3f(0.0f, 0.0f, 0.0f));
+        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
+		ps6.setCapability(PointSound.ALLOW_ENABLE_WRITE);
+        return ps6;
+    }
+
+	private static PointSound pointSound7() {
+        URL url = null;
+        String filename = "C:\\solarsystem\\soalr\\image\\UranusSound.wav";
+        try {
+            url = new URL("file", "localhost", filename);
+        } catch (Exception e) {
+            System.out.println("Can't open " + filename);
+        }
+        ps7 = new PointSound();                    // create and position a point sound
+        ps7.setEnable(false);
+        ps7.setInitialGain(0.1f);
+        PointSoundBehavior player = new PointSoundBehavior(ps7, url, new Point3f(0.0f, 0.0f, 0.0f));
+        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
+		ps7.setCapability(PointSound.ALLOW_ENABLE_WRITE);
+        return ps7;
+    }
+
+	private static PointSound pointSound8() {
+        URL url = null;
+        String filename = "C:\\solarsystem\\soalr\\image\\NeptuneSound.wav";
+        try {
+            url = new URL("file", "localhost", filename);
+        } catch (Exception e) {
+            System.out.println("Can't open " + filename);
+        }
+        ps8 = new PointSound();                    // create and position a point sound
+        ps8.setEnable(false);
+        ps8.setInitialGain(0.1f);
+        PointSoundBehavior player = new PointSoundBehavior(ps8, url, new Point3f(0.0f, 0.0f, 0.0f));
+        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
+		ps8.setCapability(PointSound.ALLOW_ENABLE_WRITE);
+        return ps8;
     }
 	
+	private static PointSound pointSound9() {
+        URL url = null;
+        String filename = "C:\\solarsystem\\soalr\\image\\PlutoSound.wav";
+        try {
+            url = new URL("file", "localhost", filename);
+        } catch (Exception e) {
+            System.out.println("Can't open " + filename);
+        }
+        ps9 = new PointSound();                    // create and position a point sound
+        ps9.setEnable(false);
+        ps9.setInitialGain(0.1f);
+        PointSoundBehavior player = new PointSoundBehavior(ps9, url, new Point3f(0.0f, 0.0f, 0.0f));
+        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
+		ps9.setCapability(PointSound.ALLOW_ENABLE_WRITE);
+        return ps9;
+    }
 	//Interaction using keyboard
 	@Override
     public void keyPressed(KeyEvent e) {
@@ -477,16 +711,17 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha1.pause();
                 y = false;
                 s1 = -1;
-				// ON  = false;
-				// ps.setEnable(ON);
+				ON1  = true;
+				ps.setEnable(ON1);
                 mtr.setUserData(s1); // reset 'UserData'
 			}
 			else {
                 y = true;
                 alpha1.resume();
                 s1 = 1;
-				// ON  = true;
-				// ps.setEnable(ON);
+                ON1  = false;
+				ps.setEnable(ON1);
+			
                 mtr.setUserData(s1);
 			}
         }
@@ -496,12 +731,16 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 v = false;
                 // sphere.setUserData(2);
                 s3 = -3;
+                ON2  = true;
+				ps2.setEnable(ON2);
                 mtr.setUserData(s3);
             } else {
                 v = true;
                 alpha2.resume();
                 // sphere.setUserData(-2);
                 s3 = 3;
+                ON2  = false;
+				ps2.setEnable(ON2);
                 mtr.setUserData(s3);
             }
         }
@@ -510,11 +749,15 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha3.pause();
                 er = false;
                 s5 = -5;
+                ON3  = true;
+				ps3.setEnable(ON3);
                 mtr.setUserData(s5);
             } else {
                 er = true;
                 alpha3.resume();
                 s5 = 5;
+                ON3  = false;
+				ps3.setEnable(ON3);
                 mtr.setUserData(s5);
             }
         }
@@ -523,24 +766,32 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha4.pause();
                 m = false;
                 s7 = -7;
+                ON4  = true;
+				ps4.setEnable(ON4);
                 mtr.setUserData(s7);
             } else {
                 m = true;
                 alpha4.resume();
                 s7 = 7;
+                ON4  = false;
+				ps4.setEnable(ON4);
                 mtr.setUserData(s7);
             }
         }
         if ((e.getKeyCode() == KeyEvent.VK_J)) {
             if (j) {
                 alpha5.pause();
-                m = false;
+                j = false;
                 s9 = -9;
+                ON5  = true;
+				ps5.setEnable(ON5);
                 mtr.setUserData(s9);
             } else {
                 j = true;
                 alpha5.resume();
                 s9 = 9;
+                ON5  = false;
+				ps5.setEnable(ON5);
                 mtr.setUserData(s9);
             }
         }
@@ -549,11 +800,15 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha6.pause();
                 s = false;
                 s11 = -11;
+                ON6  = true;
+				ps6.setEnable(ON6);
                 mtr.setUserData(s11);
             } else {
                 s = true;
                 alpha6.resume();
                 s11 = 11;
+                ON6  = false;
+				ps6.setEnable(ON6);
                 mtr.setUserData(s11);
             }
         }
@@ -562,11 +817,15 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha7.pause();
                 u = false;
                 s13 = -13;
+                ON7  = true;
+				ps7.setEnable(ON7);
                 mtr.setUserData(s13);
             } else {
                 u = true;
                 alpha7.resume();
                 s13 = 13;
+                ON7  = false;
+				ps7.setEnable(ON7);
                 mtr.setUserData(s13);
             }
         }
@@ -576,11 +835,15 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha8.pause();
                 n = false;
                 s15 = -15;
+                ON8  = true;
+				ps8.setEnable(ON8);
                 mtr.setUserData(s15);
             } else {
                 n = true;
                 alpha8.resume();
                 s15 = 15;
+                ON8  = false;
+				ps8.setEnable(ON8);
                 mtr.setUserData(s15);
             }
         }
@@ -589,11 +852,15 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha9.pause();
                 p = false;
                 s17 = -17;
+                ON9  = true;
+				ps9.setEnable(ON9);
                 mtr.setUserData(s17);
             } else {
                 p = true;
                 alpha9.resume();
                 s17 = 17;
+                ON9  = false;
+				ps9.setEnable(ON9);
                 mtr.setUserData(s17);
             }
         }
@@ -1042,4 +1309,39 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 
     }
 
+    /* for A5: a function to initialize for playing sound */
+	 public static void initialSound() {
+        soundJOAL = new SoundUtilityJOAL();
+        if (!soundJOAL.load("laser2", 0f, 0f, 10f, true))
+            System.out.println("Could not load " + "laser2");	
+        if (!soundJOAL.load("magic_bells", 0f, 0f, 10f, true))
+            System.out.println("Could not load " + "magic_bells");	
+        }
+
+    public static void playSound(int key) {
+        String snd_pt = "laser2";
+        if (key > 1)
+            snd_pt = "magic_bells";
+        soundJOAL.play(snd_pt);
+        try {
+            Thread.sleep(500); // sleep for 0.5 secs
+        } catch (InterruptedException ex) {}
+        soundJOAL.stop(snd_pt);
+    }
+
+    public static void addLights(BranchGroup sceneBG, Color3f clr, Point3f point) {
+        BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100000.0);
+        AmbientLight amLgt = new AmbientLight(new Color3f(0.2f, 0.2f, 0.2f));
+        amLgt.setInfluencingBounds(bounds);
+        sceneBG.addChild(amLgt);
+        Point3f pt  = new Point3f(point);
+        Point3f atn = new Point3f(1.0f, 0.0f, 0.0f);
+        PointLight ptLight = new PointLight(clr, pt, atn);
+        ptLight.setInfluencingBounds(bounds);
+        sceneBG.addChild(ptLight);
+    }
+
+        
+    
 }
+
