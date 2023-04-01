@@ -103,7 +103,7 @@ public class CommonsKS extends JPanel {
 
 	public static Background create_BK(Color3f clr,BoundingSphere b){
 		Background bg = new Background();
-		bg.setImage(new TextureLoader("C:\\solarsystem\\soalr\\image\\space.jpg",null).getImage());
+		bg.setImage(new TextureLoader("src\\solar\\image\\space.jpg",null).getImage());
 		bg.setImageScaleMode(Background.SCALE_FIT_MAX);
 		bg.setApplicationBounds(b);
 		bg.setColor(clr);
@@ -125,7 +125,7 @@ public class CommonsKS extends JPanel {
 		}
 		return lightBG;
 	}
-
+   
 	public static BranchGroup add_Ligh(Color3f clr, int p_num) {
 		BranchGroup lightBG = new BranchGroup();
 		Point3f atn = new Point3f(0.0f, 0.0f, 0.0f);		
@@ -198,7 +198,7 @@ public class CommonsKS extends JPanel {
 		ObjectFile f = new ObjectFile(flags, (float) (60 * Math.PI /180.0));
 		Scene s = null;
 		try {
-			s = f.load("C:\\solarsystem\\soalr\\image\\"+name + ".obj");
+			s = f.load("src\\solar\\image\\"+name + ".obj");
 		} catch (FileNotFoundException e) {			//exception
 			System.err.println(e);
 			System.exit(1);
