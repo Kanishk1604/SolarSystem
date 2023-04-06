@@ -9,24 +9,37 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.text.AttributeSet.ColorAttribute;
 import org.jogamp.java3d.*;
-import org.jogamp.java3d.loaders.IncorrectFormatException;
-import org.jogamp.java3d.loaders.ParsingErrorException;
-
-import org.jogamp.java3d.loaders.Scene;
-import org.jogamp.java3d.loaders.objectfile.ObjectFile;
 import org.jogamp.java3d.utils.geometry.*;
 import org.jogamp.java3d.utils.image.TextureLoader;
 import org.jogamp.vecmath.*;
+import org.jogamp.java3d.Alpha;
+import org.jogamp.java3d.Appearance;
+import org.jogamp.java3d.Background;
+import org.jogamp.java3d.BoundingSphere;
+import org.jogamp.java3d.BranchGroup;
+import org.jogamp.java3d.Canvas3D;
+import org.jogamp.java3d.ColoringAttributes;
+import org.jogamp.java3d.GeometryArray;
+import org.jogamp.java3d.ImageComponent2D;
+import org.jogamp.java3d.IndexedLineArray;
+import org.jogamp.java3d.Material;
+import org.jogamp.java3d.PointLight;
+import org.jogamp.java3d.PolygonAttributes;
+import org.jogamp.java3d.RotationInterpolator;
+import org.jogamp.java3d.Shape3D;
+import org.jogamp.java3d.Texture2D;
+import org.jogamp.java3d.TextureAttributes;
+import org.jogamp.java3d.Transform3D;
+import org.jogamp.java3d.TransformGroup;
+import org.jogamp.java3d.loaders.IncorrectFormatException;
+import org.jogamp.java3d.loaders.ParsingErrorException;
+import org.jogamp.java3d.loaders.Scene;
+import org.jogamp.java3d.loaders.objectfile.ObjectFile;
 import org.jogamp.java3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import org.jogamp.java3d.utils.geometry.Box;
 import org.jogamp.java3d.utils.image.TextureLoader;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
 import org.jogamp.java3d.utils.universe.ViewingPlatform;
-import org.jogamp.vecmath.AxisAngle4f;
-import org.jogamp.vecmath.Color3f;
-import org.jogamp.vecmath.Point3d;
-import org.jogamp.vecmath.Point3f;
-import org.jogamp.vecmath.Vector3d;
 
 import com.jogamp.opengl.util.texture.Texture;
 
@@ -34,8 +47,7 @@ public class CommonsKS extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static JFrame frame;
-    private static SoundUtilityJOAL soundJOAL;               // needed for sound
-	private static CollisionDetectShapes cd;
+	
 	public final static Color3f Red = new Color3f(1.0f, 0.0f, 0.0f);
 	public final static Color3f Green = new Color3f(0.0f, 1.0f, 0.0f);
 	public final static Color3f Blue = new Color3f(0.0f, 0.0f, 1.0f);
@@ -75,8 +87,8 @@ public class CommonsKS extends JPanel {
 	public static RotationInterpolator rotating(int speed, TransformGroup rotTG,Alpha alpha,float a) {
 		rotTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		Transform3D zAxis = new Transform3D();
-		AxisAngle4f axis = new AxisAngle4f(0.0f,1.0f,0.0f,(float) Math.PI);	//rotate around z-axis
-		zAxis.setRotation(axis);
+		// AxisAngle4f axis = new AxisAngle4f(0.0f,0.0f,1.0f,(float) Math.PI);	//rotate around z-axis
+		// zAxis.setRotation(axis);
 		zAxis.rotZ(Math.PI/6);
 		//zAxis.setTranslation(new Vector3d(0.46f, 0.68f, 0f));
 		zAxis.setTranslation(new Vector3d(0f,0.0f, a));
@@ -103,7 +115,7 @@ public class CommonsKS extends JPanel {
 
 	public static Background create_BK(Color3f clr,BoundingSphere b){
 		Background bg = new Background();
-		bg.setImage(new TextureLoader("src\\solar\\image\\space.jpg",null).getImage());
+		bg.setImage(new TextureLoader("C:\\solarsystem\\soalr\\image\\space.jpg",null).getImage());
 		bg.setImageScaleMode(Background.SCALE_FIT_MAX);
 		bg.setApplicationBounds(b);
 		bg.setColor(clr);
@@ -114,21 +126,6 @@ public class CommonsKS extends JPanel {
 	public static BranchGroup add_Lights(Color3f clr, int p_num) {
 		BranchGroup lightBG = new BranchGroup();
 		Point3f atn = new Point3f(0.5f, 0.0f, 0.0f);		
-		PointLight ptLight;
-		float adjt = 1f;
-		for (int i = 0; (i < p_num) && (i < 2); i++) {
-			if (i > 0) 
-				adjt = -1f; 
-			ptLight = new PointLight(clr, new Point3f(3.0f * adjt, 1.0f, 3.0f  * adjt), atn);
-			ptLight.setInfluencingBounds(hundredBS);
-			lightBG.addChild(ptLight);
-		}
-		return lightBG;
-	}
-   
-	public static BranchGroup add_Ligh(Color3f clr, int p_num) {
-		BranchGroup lightBG = new BranchGroup();
-		Point3f atn = new Point3f(0.0f, 0.0f, 0.0f);		
 		PointLight ptLight;
 		float adjt = 1f;
 		for (int i = 0; (i < p_num) && (i < 2); i++) {
@@ -192,13 +189,12 @@ public class CommonsKS extends JPanel {
 		frame.setSize(800, 800);                           // set the size of the JFrame
 		frame.setVisible(true);
 	}
-
 	public static BranchGroup loadShape(String name, float x, float y, float z, float scale) {
 		int flags = ObjectFile.RESIZE | ObjectFile.TRIANGULATE | ObjectFile.STRIPIFY;
 		ObjectFile f = new ObjectFile(flags, (float) (60 * Math.PI /180.0));
 		Scene s = null;
 		try {
-			s = f.load("src\\solar\\image\\"+name + ".obj");
+			s = f.load("C:\\solarsystem\\soalr\\image\\"+name+".obj");
 		} catch (FileNotFoundException e) {			//exception
 			System.err.println(e);
 			System.exit(1);
@@ -213,42 +209,35 @@ public class CommonsKS extends JPanel {
 		BranchGroup objBG = s.getSceneGroup();
 		Transform3D translation = new Transform3D();           
 		translation.setTranslation(new Vector3f(x, y, z));		//vector for translation
-		Shape3D sh = (Shape3D) objBG.getChild(0);
-		cd = new CollisionDetectShapes(sh);
-		cd.setSchedulingBounds(CommonsKS.twentyBS);        // detect column's collision
+
 		Transform3D scaler = new Transform3D();
 		scaler.setScale(scale);			//vector for scaling
-		// sh.setUserData(1);
+
 		Transform3D trfm = new Transform3D();           
 		trfm.mul(translation); 							// apply translation
 		trfm.mul(scaler);                              // apply scaler
-		                              
+		                                
 		TransformGroup objTG = new TransformGroup(trfm);
 		objTG.addChild(objBG);
-		objTG.addChild(cd);
-		// soundJOAL.play("crash");
-		
-
 		BranchGroup objBG1 = new BranchGroup();
 		objBG1.addChild(objTG);
 		return objBG1;
 	}
-
-	public static  TransformGroup gh(){
-		Transform3D trfm = new Transform3D();           
-		trfm.setTranslation(new Vector3f(10f,10f,10f));
-		TransformGroup objTG = null;
-		if(cd.getCr() == true){
-			soundJOAL.play("crash");
-			objTG  = new TransformGroup(trfm);
-		}
-		return objTG;
+	public static void enable_LOD(BranchGroup sceneBG,TransformGroup sceneTG, TransformGroup objTG) {
+		
+		sceneTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		sceneTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		sceneTG.addChild(objTG);
+		KeyNavigatorBehavior myRotationbehavior = new KeyNavigatorBehavior(sceneTG);
+		BehaviorArrowKey myViewRotationbehavior = new BehaviorArrowKey(sceneTG);
+		myRotationbehavior.setSchedulingBounds(new BoundingSphere());
+		sceneBG.addChild(myRotationbehavior);
+		myViewRotationbehavior.setSchedulingBounds(new BoundingSphere());
+		sceneBG.addChild(myViewRotationbehavior);
 	}
 	public static void main(String[] args) {
 		frame = new JFrame("KS's Common File");            
 		frame.getContentPane().add(new CommonsKS(create_Scene()));  // create an instance of the class
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-
-	
 }
