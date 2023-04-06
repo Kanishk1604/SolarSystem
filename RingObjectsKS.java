@@ -539,7 +539,7 @@ class Uranus extends RingObjectsKS {
         this.d = d;
         // alpha = new Alpha(-1,5000);
 
-        String file = "C:\\solarsystem\\soalr\\image\\\\sun.jpg";
+        String file = "C:\\solarsystem\\soalr\\image\\Uranus.jpg";
         TextureLoader loader = new TextureLoader(file, null);
         ImageComponent2D image = loader.getImage();
         if (image == null)
@@ -641,7 +641,7 @@ class Pluto extends RingObjectsKS {
         this.d = d;
         // alpha = new Alpha(-1,5000);
 
-        String file = "C:\\solarsystem\\soalr\\image\\sun.jpg";
+        String file = "C:\\solarsystem\\soalr\\image\\pluto.jpg";
         TextureLoader loader = new TextureLoader(file, null);
         ImageComponent2D image = loader.getImage();
         if (image == null)
@@ -762,7 +762,7 @@ class rocket extends RingObjectsKS	{
 		objBG1.addChild(tran1);
 		tran1.addChild(objTG);
 		Alpha alpha1 = new Alpha(1, 80000);
-		objBG1.addChild(rotate_half(10000,tran1, alpha1));		//rotating behavior of the 2ndring
+		// objBG1.addChild(rotate_half(10000,tran1, alpha1));		//rotating behavior of the 2ndring
 		return objBG1;
 	}
 	public rocket(Alpha alpha)	{
