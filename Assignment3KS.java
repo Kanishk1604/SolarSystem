@@ -12,6 +12,7 @@ import org.jogamp.java3d.loaders.IncorrectFormatException;
 import org.jogamp.java3d.loaders.ParsingErrorException;
 import org.jogamp.java3d.loaders.Scene;
 import org.jogamp.java3d.loaders.objectfile.ObjectFile;
+import org.jogamp.java3d.utils.geometry.Box;
 import org.jogamp.java3d.utils.geometry.Sphere;
 import org.jogamp.java3d.utils.image.TextureLoader;
 import org.jogamp.java3d.utils.picking.PickResult;
@@ -69,7 +70,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	private static RingObjectsKS neptune;
 	private static RingObjectsKS pluto;
 	
-
+    private static int control;
 	private static RingObjectsKS[] Object3D = new RingObjectsKS[404];
 	private static boolean space = true;
 
@@ -133,15 +134,6 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	
 	 private static SoundUtilityJOAL soundJOAL;               // for A5: needed for sound
     
-    private static PointSound ps;
-    private static PointSound ps2;
-    private static PointSound ps3;
-    private static PointSound ps4;
-    private static PointSound ps5;
-    private static PointSound ps6;
-    private static PointSound ps7;
-    private static PointSound ps8;
-    private static PointSound ps9;
 
 	public static BranchGroup create_Scene() {
         Transform3D scaler = new Transform3D(); // 4x4 matrix for scaling
@@ -149,7 +141,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		BranchGroup sceneBG = new BranchGroup();           // create the scene' BranchGroup
 		TransformGroup sceneTG = new TransformGroup(); 
 		TransformGroup baseTG = new TransformGroup();   // create the scene's TransformGroup
-
+        initialSound();
 
 		R1 = new TransformGroup();
 		TransformGroup cir  = new TransformGroup();
@@ -278,7 +270,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         // TransformGroup met = new TransformGroup();
 
         // meteors
-        for (int i = 9; i < 28; i++) {
+        for (int i = 9; i < 27; i++) {
             met.addChild(Object3D[i].position_Object());
         }
 
@@ -346,7 +338,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         alpha7 = new Alpha(-1, 370000);
         alpha8 = new Alpha(-1, 420000);
         alpha9 = new Alpha(-1, 510000);
-        alpha10 = new Alpha(-1, 5000);
+        alpha10 = new Alpha(-1, 400000);
 
         rotalpha1 = new Alpha(-1, 7000);
         rotalpha2 = new Alpha(-1, 15000);
@@ -422,15 +414,6 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		
 		// mercuryTG.addChild(r1T);
 		
-        mercuryTG.addChild(pointSound());
-        venusTG.addChild(pointSound2());
-        earthTG.addChild(pointSound3());
-        marsTG.addChild(pointSound4());
-        jupiterTG.addChild(pointSound5());
-        saturnTG.addChild(pointSound6());
-        uranusTG.addChild(pointSound7());
-        neptuneTG.addChild(pointSound8());
-        plutoTG.addChild(pointSound9());
 
 		R1.addChild(mercuryTG);
 		R1.addChild(venusTG);
@@ -442,7 +425,10 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		R1.addChild(neptuneTG);
 		R1.addChild(plutoTG);
 
-		
+        TransformGroup objTG = new TransformGroup();
+		Appearance app = CommonsKS.obj_Appearance(CommonsKS.Cyan);
+		objTG.addChild(Object3D[27].position_Object());
+		CommonsKS.enable_LOD(sceneBG,sceneTG,objTG);
 		//R1.addChild(CommonsKS.rotate_Behavior(5000,R1));
 
 		//orbits
@@ -504,17 +490,17 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 
         pickTool = new PickTool(sceneBG);
         pickTool.setMode(PickTool.GEOMETRY);
-        BranchGroup f = new BranchGroup();
+
 		 su = new SimpleUniverse(canvas);    // create a SimpleUniverse
-		CommonsKS.define_Viewer(su, new Point3d(4.5d, 0.0d, 1.0d));
-        TransformGroup g = CommonsKS.gh();
-		f.addChild(g);
-		f.compile();
-		enableAudio(su);                                   // enable audio
-		sceneBG.addChild(CommonsKS.key_Navigation(su));     // allow key navigation
+		CommonsKS.define_Viewer(su, new Point3d(22.5d, 0.0d, 1.0d)); //4.5d, 3.0d, 1.0d
+        // TransformGroup g = CommonsKS.gh();
+		// f.addChild(g);
+		// f.compile();
+        
+		// sceneBG.addChild(CommonsKS.key_Navigation(su));     // allow key navigation
 		sceneBG.compile();		                           // optimize the BranchGroup
 		su.addBranchGraph(sceneBG);                        // attach the scene to SimpleUniverse
-        su.addBranchGraph(f);
+        // su.addBranchGraph(f);
 		setLayout(new BorderLayout());
 		add("Center", canvas);
 		frame.setSize(800, 800);                           // set the size of the JFrame
@@ -529,174 +515,6 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	private void enableAudio(SimpleUniverse simple_U) {
-
-        JOALMixer mixer = null;                                 // create a null mixer as a joalmixer
-        Viewer viewer = simple_U.getViewer();
-        viewer.getView().setBackClipDistance(20.0f);         // make object(s) disappear beyond 20f 
-
-        if (mixer == null && viewer.getView().getUserHeadToVworldEnable()) {
-            mixer = new JOALMixer(viewer.getPhysicalEnvironment());
-            if (!mixer.initialize()) {                       // add mixer as audio device if successful
-                System.out.println("Open AL failed to init");
-                viewer.getPhysicalEnvironment().setAudioDevice(null);
-            }
-        }
-    }
-
-    private static PointSound pointSound() {
-        URL url = null;
-        String filename = "C:\\solarsystem\\soalr\\image\\magic_bells.wav";
-        try {
-            url = new URL("file", "localhost", filename);
-        } catch (Exception e) {
-            System.out.println("Can't open " + filename);
-        }
-        ps = new PointSound();                    // create and position a point sound
-        ps.setEnable(false);
-        ps.setInitialGain(0.1f);
-        PointSoundBehavior player = new PointSoundBehavior(ps, url, new Point3f(0.0f, 0.0f, 0.0f));
-        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.09));
-		ps.setCapability(PointSound.ALLOW_ENABLE_WRITE);
-        return ps;
-    }
-
-	private static PointSound pointSound2() {
-        URL url = null;
-        String filename = "C:\\solarsystem\\soalr\\image\\VenusSound.wav";
-        try {
-            url = new URL("file", "localhost", filename);
-        } catch (Exception e) {
-            System.out.println("Can't open " + filename);
-        }
-        ps2 = new PointSound();                    // create and position a point sound
-        ps2.setEnable(false);
-        ps2.setInitialGain(0.1f);
-        PointSoundBehavior player = new PointSoundBehavior(ps2, url, new Point3f(0.0f, 0.0f, 0.0f));
-        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 2));
-		ps2.setCapability(PointSound.ALLOW_ENABLE_WRITE);
-        return ps2;
-    }
-
-	private static PointSound pointSound3() {
-        URL url = null;
-        String filename = "C:\\solarsystem\\soalr\\image\\EarthSound.wav";
-        try {
-            url = new URL("file", "localhost", filename);
-        } catch (Exception e) {
-            System.out.println("Can't open " + filename);
-        }
-        ps3 = new PointSound();                    // create and position a point sound
-        ps3.setEnable(false);
-        ps3.setInitialGain(0.1f);
-        PointSoundBehavior player = new PointSoundBehavior(ps3, url, new Point3f(0.0f, 0.0f, 0.0f));
-        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
-		ps3.setCapability(PointSound.ALLOW_ENABLE_WRITE);
-        return ps3;
-    }
-
-	private static PointSound pointSound4() {
-        URL url = null;
-        String filename = "C:\\solarsystem\\soalr\\image\\MarsSound.wav";
-        try {
-            url = new URL("file", "localhost", filename);
-        } catch (Exception e) {
-            System.out.println("Can't open " + filename);
-        }
-        ps4 = new PointSound();                    // create and position a point sound
-        ps4.setEnable(false);
-        ps4.setInitialGain(0.1f);
-        PointSoundBehavior player = new PointSoundBehavior(ps4, url, new Point3f(0.0f, 0.0f, 0.0f));
-        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
-		ps4.setCapability(PointSound.ALLOW_ENABLE_WRITE);
-        return ps4;
-    }
-
-	private static PointSound pointSound5() {
-        URL url = null;
-        String filename = "C:\\solarsystem\\soalr\\image\\JupiterSound.wav";
-        try {
-            url = new URL("file", "localhost", filename);
-        } catch (Exception e) {
-            System.out.println("Can't open " + filename);
-        }
-        ps5 = new PointSound();                    // create and position a point sound
-        ps5.setEnable(false);
-        ps5.setInitialGain(0.1f);
-        PointSoundBehavior player = new PointSoundBehavior(ps5, url, new Point3f(0.0f, 0.0f, 0.0f));
-        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
-		ps5.setCapability(PointSound.ALLOW_ENABLE_WRITE);
-        return ps5;
-    }
-
-	private static PointSound pointSound6() {
-        URL url = null;
-        String filename = "C:\\solarsystem\\soalr\\image\\SaturnSound.wav";
-        try {
-            url = new URL("file", "localhost", filename);
-        } catch (Exception e) {
-            System.out.println("Can't open " + filename);
-        }
-        ps6 = new PointSound();                    // create and position a point sound
-        ps6.setEnable(false);
-        ps6.setInitialGain(0.1f);
-        
-        PointSoundBehavior player = new PointSoundBehavior(ps6, url, new Point3f(0.0f, 0.0f, 0.0f));
-        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
-		ps6.setCapability(PointSound.ALLOW_ENABLE_WRITE);
-        return ps6;
-    }
-
-	private static PointSound pointSound7() {
-        URL url = null;
-        String filename = "C:\\solarsystem\\soalr\\image\\UranusSound.wav";
-        try {
-            url = new URL("file", "localhost", filename);
-        } catch (Exception e) {
-            System.out.println("Can't open " + filename);
-        }
-        ps7 = new PointSound();                    // create and position a point sound
-        ps7.setEnable(false);
-        ps7.setInitialGain(0.1f);
-        PointSoundBehavior player = new PointSoundBehavior(ps7, url, new Point3f(0.0f, 0.0f, 0.0f));
-        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
-		ps7.setCapability(PointSound.ALLOW_ENABLE_WRITE);
-        return ps7;
-    }
-
-	private static PointSound pointSound8() {
-        URL url = null;
-        String filename = "C:\\solarsystem\\soalr\\image\\NeptuneSound.wav";
-        try {
-            url = new URL("file", "localhost", filename);
-        } catch (Exception e) {
-            System.out.println("Can't open " + filename);
-        }
-        ps8 = new PointSound();                    // create and position a point sound
-        ps8.setEnable(false);
-        ps8.setInitialGain(0.1f);
-        PointSoundBehavior player = new PointSoundBehavior(ps8, url, new Point3f(0.0f, 0.0f, 0.0f));
-        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
-		ps8.setCapability(PointSound.ALLOW_ENABLE_WRITE);
-        return ps8;
-    }
-	
-	private static PointSound pointSound9() {
-        URL url = null;
-        String filename = "C:\\solarsystem\\soalr\\image\\PlutoSound.wav";
-        try {
-            url = new URL("file", "localhost", filename);
-        } catch (Exception e) {
-            System.out.println("Can't open " + filename);
-        }
-        ps9 = new PointSound();                    // create and position a point sound
-        ps9.setEnable(false);
-        ps9.setInitialGain(0.1f);
-        PointSoundBehavior player = new PointSoundBehavior(ps9, url, new Point3f(0.0f, 0.0f, 0.0f));
-        player.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 0.1));
-		ps9.setCapability(PointSound.ALLOW_ENABLE_WRITE);
-        return ps9;
-    }
 	//Interaction using keyboard
 	@Override
     public void keyPressed(KeyEvent e) {
@@ -713,17 +531,13 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha1.pause();
                 y = false;
                 s1 = -1;
-				ON1  = true;
-				ps.setEnable(ON1);
+				playSound(1);
                 mtr.setUserData(s1); // reset 'UserData'
 			}
 			else {
                 y = true;
                 alpha1.resume();
                 s1 = 1;
-                ON1  = false;
-				ps.setEnable(ON1);
-			
                 mtr.setUserData(s1);
 			}
         }
@@ -733,16 +547,14 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 v = false;
                 // sphere.setUserData(2);
                 s3 = -3;
-                ON2  = true;
-				ps2.setEnable(ON2);
+                playSound(2);
                 mtr.setUserData(s3);
             } else {
                 v = true;
                 alpha2.resume();
                 // sphere.setUserData(-2);
                 s3 = 3;
-                ON2  = false;
-				ps2.setEnable(ON2);
+            
                 mtr.setUserData(s3);
             }
         }
@@ -751,15 +563,13 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha3.pause();
                 er = false;
                 s5 = -5;
-                ON3  = true;
-				ps3.setEnable(ON3);
+                playSound(3);
                 mtr.setUserData(s5);
             } else {
                 er = true;
                 alpha3.resume();
                 s5 = 5;
-                ON3  = false;
-				ps3.setEnable(ON3);
+              
                 mtr.setUserData(s5);
             }
         }
@@ -768,15 +578,13 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha4.pause();
                 m = false;
                 s7 = -7;
-                ON4  = true;
-				ps4.setEnable(ON4);
+                playSound(4);
                 mtr.setUserData(s7);
             } else {
                 m = true;
                 alpha4.resume();
                 s7 = 7;
-                ON4  = false;
-				ps4.setEnable(ON4);
+            
                 mtr.setUserData(s7);
             }
         }
@@ -785,15 +593,13 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha5.pause();
                 j = false;
                 s9 = -9;
-                ON5  = true;
-				ps5.setEnable(ON5);
+                playSound(5);
                 mtr.setUserData(s9);
             } else {
                 j = true;
                 alpha5.resume();
                 s9 = 9;
-                ON5  = false;
-				ps5.setEnable(ON5);
+                
                 mtr.setUserData(s9);
             }
         }
@@ -802,15 +608,13 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha6.pause();
                 s = false;
                 s11 = -11;
-                ON6  = true;
-				ps6.setEnable(ON6);
+                playSound(6);
                 mtr.setUserData(s11);
             } else {
                 s = true;
                 alpha6.resume();
                 s11 = 11;
-                ON6  = false;
-				ps6.setEnable(ON6);
+               
                 mtr.setUserData(s11);
             }
         }
@@ -819,15 +623,13 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha7.pause();
                 u = false;
                 s13 = -13;
-                ON7  = true;
-				ps7.setEnable(ON7);
+                playSound(7);
                 mtr.setUserData(s13);
             } else {
                 u = true;
                 alpha7.resume();
                 s13 = 13;
-                ON7  = false;
-				ps7.setEnable(ON7);
+               
                 mtr.setUserData(s13);
             }
         }
@@ -837,15 +639,13 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha8.pause();
                 n = false;
                 s15 = -15;
-                ON8  = true;
-				ps8.setEnable(ON8);
+                playSound(8);
                 mtr.setUserData(s15);
             } else {
                 n = true;
                 alpha8.resume();
                 s15 = 15;
-                ON8  = false;
-				ps8.setEnable(ON8);
+             
                 mtr.setUserData(s15);
             }
         }
@@ -854,15 +654,13 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 alpha9.pause();
                 p = false;
                 s17 = -17;
-                ON9  = true;
-				ps9.setEnable(ON9);
+                playSound(9);
                 mtr.setUserData(s17);
             } else {
                 p = true;
                 alpha9.resume();
                 s17 = 17;
-                ON9  = false;
-				ps9.setEnable(ON9);
+             
                 mtr.setUserData(s17);
             }
         }
@@ -1314,19 +1112,59 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
     /* for A5: a function to initialize for playing sound */
 	 public static void initialSound() {
         soundJOAL = new SoundUtilityJOAL();
-        if (!soundJOAL.load("laser2", 0f, 0f, 10f, true))
-            System.out.println("Could not load " + "laser2");	
-        if (!soundJOAL.load("magic_bells", 0f, 0f, 10f, true))
+
+            if (!soundJOAL.load("magic_bells", 0f, 0f, 10f, true))
             System.out.println("Could not load " + "magic_bells");	
+
+            if (!soundJOAL.load("VenusSound", 0f, 0f, 10f, true))
+            System.out.println("Could not load " + "VenusSound");
+
+            if (!soundJOAL.load("EarthSound", 0f, 0f, 10f, true))
+            System.out.println("Could not load " + "EarthSound");
+
+            if (!soundJOAL.load("MarsSound", 0f, 0f, 10f, true))
+            System.out.println("Could not load " + "MarsSound");
+
+            if (!soundJOAL.load("JupiterSound", 0f, 0f, 10f, true))
+            System.out.println("Could not load " + "JupiterSound");
+
+            if (!soundJOAL.load("SaturnSound", 0f, 0f, 10f, true))
+            System.out.println("Could not load " + "SaturnSound");
+
+            if (!soundJOAL.load("UranusSound", 0f, 0f, 10f, true))
+            System.out.println("Could not load " + "UranusSound");
+
+            if (!soundJOAL.load("NeptuneSound", 0f, 0f, 10f, true))
+            System.out.println("Could not load " + "NeptuneSound");
+
+            if (!soundJOAL.load("PlutoSound", 0f, 0f, 10f, true))
+            System.out.println("Could not load " + "PlutoSound");
+          
         }
 
     public static void playSound(int key) {
-        String snd_pt = "laser2";
-        if (key > 1)
-            snd_pt = "magic_bells";
+        String snd_pt = "magic_bells";
+        // if (key == 1)
+        //     snd_pt = "magic_bells";
+        if (key == 2)
+            snd_pt = "VenusSound";  
+        else if (key == 3)
+            snd_pt = "EarthSound";    
+        else if (key == 4)
+            snd_pt = "MarsSound";
+        else if (key == 5)
+            snd_pt = "JupiterSound";    
+        else if (key == 6)
+            snd_pt = "SaturnSound";
+        else if (key == 7)
+            snd_pt = "UranusSound";
+        else if (key == 8)
+            snd_pt = "NeptuneSound";  
+        else if (key == 9)
+            snd_pt = "PlutoSound";  
         soundJOAL.play(snd_pt);
         try {
-            Thread.sleep(500); // sleep for 0.5 secs
+            Thread.sleep(2500); // sleep for 0.5 secs
         } catch (InterruptedException ex) {}
         soundJOAL.stop(snd_pt);
     }
