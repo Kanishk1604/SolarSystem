@@ -6,12 +6,16 @@ import org.jogamp.java3d.utils.geometry.*;
 import org.jogamp.java3d.utils.image.TextureLoader;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
 import org.jogamp.vecmath.*;
+
+import solar.CollisionDetectShapes;
+
 import java.io.FileNotFoundException;
 
 import org.jogamp.java3d.loaders.IncorrectFormatException;
 import org.jogamp.java3d.loaders.ParsingErrorException;
 import org.jogamp.java3d.loaders.Scene;
 import org.jogamp.java3d.loaders.objectfile.ObjectFile;
+import org.jdesktop.j3d.examples.collision.Box;
 
 
 public abstract class RingObjectsKS {
@@ -21,7 +25,9 @@ public abstract class RingObjectsKS {
     // public Alpha get_Alpha() { return alpha; };    // NOTE: keep for future use 
 	// protected static Alpha alpha;
     // public static Transform3D trfm;
-
+    public CollisionDetectShapes cd;
+    protected static boolean yy;
+    public static TransformGroup newrocket;
 }
 
 class StringA2 extends RingObjectsKS {
@@ -137,8 +143,7 @@ class export extends RingObjectsKS {
         a.setTexture(setTexture()); // set the texture to the appearance
         Shape3D sh = (Shape3D) objBG.getChild(0);
         sh.setAppearance(a);
-        CollisionDetectShapes cd = new CollisionDetectShapes(sh);
-        cd.setSchedulingBounds(CommonsKS.twentyBS); // detect column's collision
+     
 
         Transform3D r1 = new Transform3D();
         r1.setTranslation(new Vector3f((float) aa, (float) b, (float) d)); // 0,0.06f,0
@@ -360,6 +365,67 @@ class Earth extends RingObjectsKS {
         Sphere s = new Sphere(0.12f, Primitive.GENERATE_TEXTURE_COORDS, 30, app);
         R1.addChild(s);
         s.setUserData(3);
+        // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
+        return R1;
+    }
+
+    public Node position_Object() {
+        return create_Object();
+    }
+
+}
+class BoxCol extends RingObjectsKS {
+    protected BranchGroup objBG; // load external object to 'objBG'
+    Color3f clr;
+    private float scaling;
+    private int num;
+    private float d;
+    private float b;
+    private float c;
+    private float x;
+    private float y;
+    private float z;
+    private SoundUtilityJOAL ss;
+    Texture t;
+    TransparencyAttributes ta;
+    protected Appearance app = new Appearance();
+
+    public BoxCol(Color3f c, float scale,float b,float cc, float d,float x,float y, float z,SoundUtilityJOAL soundJOAL) { // identify object as "Earth.obj"
+        clr = c;
+        scaling = scale;
+        this.d = d;
+        this.b = b;
+        this.c = cc;
+        this.x  =x;
+        this.y  =y;
+        this.z =z ;
+        ss = soundJOAL;
+    }
+
+    protected Node create_Object() {
+        Transform3D mul= new Transform3D();
+
+        Transform3D r1 = new Transform3D();
+        r1.setTranslation(new Vector3f((float) b,(float)c,(float) d)); // 0.0f, 0.0f, (float) d 0.5f
+        r1.setScale(scaling); // 0.35
+        // r1.rotZ(Math.PI/x);
+        mul.mul(r1);
+        TransformGroup R1 = new TransformGroup(mul);
+        
+        Shape3D s1 = new Box(y,x, z);   // 0.2f 5.0
+        Appearance app1 = s1.getAppearance();
+		ColoringAttributes ca = new ColoringAttributes();
+		ca.setColor(CommonsKS.Red);                     // set column's color and make changeable
+		app1.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_WRITE);
+		app1.setColoringAttributes(ca);
+
+        R1.addChild(s1);
+        cd = new CollisionDetectShapes(s1,ss);
+        cd.setSchedulingBounds(CommonsKS.twentyBS);
+        R1.addChild(cd);
+        if(cd.getCr()){
+            yy = true;
+        }
         // R1.addChild(CommonsKS.rotate_Behavior(50, R1,alpha));
         return R1;
     }
@@ -715,10 +781,14 @@ class Meteor extends RingObjectsKS {
         Shape3D sh = (Shape3D) objBG.getChild(0);
         sh.setAppearance(a);
         sh.setUserData(num);
+        // detect column's collision
         Transform3D r1 = new Transform3D();
         r1.setTranslation(new Vector3f((float) aa,(float) b,(float) cc));      //1, 2f, 1
-        r1.setScale(0.02);
+        r1.setScale(0.02);   //0.02
         TransformGroup R1 = new TransformGroup(r1);
+        // cd = new CollisionDetectShapes(sh);
+        // cd.setSchedulingBounds(CommonsKS.twentyBS); 
+        // R1.addChild(cd);
         R1.addChild(objBG);
         return R1;
     }
@@ -767,7 +837,7 @@ class rocket extends RingObjectsKS	{
 	}
 	public rocket(Alpha alpha)	{
 		Transform3D translation = new Transform3D();           
-		translation.setTranslation(new Vector3f(0f, 0f, 4.5f));		//vector for translation
+		translation.setTranslation(new Vector3f(0.7f,0f,4.2f  ));		//vector for translation 4.5f 0f, 0f,4.5f
 
 		Transform3D scaler = new Transform3D();
 		scaler.setScale(0.1);			//vector for scaling
@@ -791,7 +861,12 @@ class rocket extends RingObjectsKS	{
 		objTG.addChild(objSH5);
 		objTG.addChild(objSH6);
 		
-		//createContent(alpha);
+        // if(yy){
+        //     Transform3D tt = new Transform3D();
+        //     tt.setTranslation(new Vector3d(10,10,10));
+        //     newrocket = new TransformGroup(tt);
+        // }
+		// //createContent(alpha);
 	}
 	protected Node create_Object()	{                            
 		
