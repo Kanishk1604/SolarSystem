@@ -386,8 +386,7 @@ class BoxCol extends RingObjectsKS {
     private float y;
     private float z;
     private SoundUtilityJOAL ss;
-    Texture t;
-    TransparencyAttributes ta;
+ 
     protected Appearance app = new Appearance();
 
     public BoxCol(Color3f c, float scale,float b,float cc, float d,float x,float y, float z,SoundUtilityJOAL soundJOAL) { // identify object as "Earth.obj"
@@ -400,6 +399,9 @@ class BoxCol extends RingObjectsKS {
         this.y  =y;
         this.z =z ;
         ss = soundJOAL;
+
+     
+
     }
 
     protected Node create_Object() {
@@ -415,10 +417,11 @@ class BoxCol extends RingObjectsKS {
         Shape3D s1 = new Box(y,x, z);   // 0.2f 5.0
         Appearance app1 = s1.getAppearance();
 		ColoringAttributes ca = new ColoringAttributes();
+        
 		ca.setColor(CommonsKS.Red);                     // set column's color and make changeable
 		app1.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_WRITE);
 		app1.setColoringAttributes(ca);
-
+      
         R1.addChild(s1);
         cd = new CollisionDetectShapes(s1,ss);
         cd.setSchedulingBounds(CommonsKS.twentyBS);
@@ -837,7 +840,7 @@ class rocket extends RingObjectsKS	{
 	}
 	public rocket(Alpha alpha)	{
 		Transform3D translation = new Transform3D();           
-		translation.setTranslation(new Vector3f(0.7f,0f,4.2f  ));		//vector for translation 4.5f 0f, 0f,4.5f
+		translation.setTranslation(new Vector3f(0.7f,0f,4.35f  ));		//vector for translation 4.5f 0f, 0f,4.5f   0.7,0,4.2
 
 		Transform3D scaler = new Transform3D();
 		scaler.setScale(0.1);			//vector for scaling
