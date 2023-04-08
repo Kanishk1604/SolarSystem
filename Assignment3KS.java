@@ -31,9 +31,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 
-public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
+public class Assignment3KS extends JPanel implements KeyListener,MouseListener{ //implements KeyListener,MouseListener
   
-    
+    protected static TransformGroup viewer= new TransformGroup() ;
 	private static final long serialVersionUID = 1L;
 	private static JFrame frame;
 	private static SimpleUniverse su;
@@ -131,6 +131,11 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
     private static PickTool pickTool;
     private Canvas3D canvas;
 	private static TransformGroup R1;
+	private static TransformGroup sceneTG;
+	private static TransformGroup objTG;
+    private static BranchGroup sceneBG;
+    // private static BranchGroup rockBG;
+
 	public static Transform3D trfm = new Transform3D();
 	// public static TransformGroup rocket  = new TransformGroup();
 	private static Sphere mtr;
@@ -142,8 +147,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	public static BranchGroup create_Scene() {
         Transform3D scaler = new Transform3D(); // 4x4 matrix for scaling
 		scaler.setScale(new Vector3d(0,0,1f));
-		BranchGroup sceneBG = new BranchGroup();           // create the scene' BranchGroup
-		TransformGroup sceneTG = new TransformGroup(); 
+		sceneBG = new BranchGroup();           // create the scene' BranchGroup
+		sceneTG = new TransformGroup(); 
 		TransformGroup baseTG = new TransformGroup();   // create the scene's TransformGroup
         initialSound();
 
@@ -174,7 +179,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         pluto = new Pluto(CommonsKS.White, (float) 0.7, (float) 9); // create the external object
 
         box = new BoxCol(CommonsKS.Red, 0.1f,0.7f,0f,4.2f,5,0.8f,0.2f,soundJOAL);
-        box1 = new BoxCol(CommonsKS.Red, 0.1f,0.7f,0f,3.95f,1,1f,4.2f,soundJOAL);
+        box1 = new BoxCol(CommonsKS.Red, 0.1f,0.7f,0f,3.95f,1,1f,4.3f,soundJOAL);
         box2 = new BoxCol(CommonsKS.Red, 0.1f,0.7f,0f,3.7f,5,0.8f,0.2f,soundJOAL);  
 
         Object3D[9] = new Meteor("meteor1", s1,CommonsKS.Grey,0f,0.26f,0.9f);
@@ -436,16 +441,15 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
         R1.addChild(box1.position_Object());
         R1.addChild(box2.position_Object());
 
-        TransformGroup objTG = new TransformGroup();
+        objTG = new TransformGroup();
 		Appearance app = CommonsKS.obj_Appearance(CommonsKS.Cyan);
 		objTG.addChild(Object3D[27].position_Object());
-        objTG.addChild(CommonsKS.rotate_Behavior(50000,objTG,alpha1));
+        // objTG.addChild(CommonsKS.rotate_Behavior(50000,objTG,alpha1));
 
-		// CommonsKS.enable_LOD(sceneBG,sceneTG,objTG);
+		CommonsKS.enable_LOD(sceneBG,sceneTG,objTG);
 		//R1.addChild(CommonsKS.rotate_Behavior(5000,R1));
-        R1.addChild(objTG);
-        // TransformGroup newPosi = CollisionDetectShapes.gettrans();
-		//orbits
+        // R1.addChild(objTG);
+
 		RingObjectsKS merOrb = new circle((float)x);
 		RingObjectsKS venOrb = new circle((float)2);
 		RingObjectsKS EarthOrb = new circle((float)3);
@@ -496,7 +500,9 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		return sceneBG;
     }
  
-    
+    public static void setview(){
+        sceneBG.addChild(CommonsKS.enable_LOD(sceneBG,sceneTG,objTG));
+    }
     /* NOTE: Keep the constructor for each of the labs and assignments */
 	public Assignment3KS(BranchGroup sceneBG) {
 		GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
@@ -506,14 +512,13 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 
         pickTool = new PickTool(sceneBG);
         pickTool.setMode(PickTool.GEOMETRY);
-
+       
 		 su = new SimpleUniverse(canvas);    // create a SimpleUniverse
 		CommonsKS.define_Viewer(su, new Point3d(22.5d, 0.0d, 1.0d)); //4.5d, 3.0d, 1.0d
         // TransformGroup g = CommonsKS.gh();
 		// f.addChild(g);
 		// f.compile();
         
-		// sceneBG.addChild(CommonsKS.key_Navigation(su));     // allow key navigation
 		sceneBG.compile();		                           // optimize the BranchGroup
 		su.addBranchGraph(sceneBG);                        // attach the scene to SimpleUniverse
         // su.addBranchGraph(f);
@@ -532,7 +537,7 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	}
 
 
-	//Interaction using keyboard
+	// Interaction using keyboard
 	@Override
     public void keyPressed(KeyEvent e) {
 
@@ -1092,6 +1097,9 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
                 a9 = false;
 
             }
+           if(canvas.getName().equalsIgnoreCase("2"))	{
+                R1.addChild(objTG);
+				}
         }
     }
 
