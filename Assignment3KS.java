@@ -21,6 +21,7 @@ import org.jogamp.java3d.utils.universe.SimpleUniverse;
 import org.jogamp.vecmath.*;
 import org.jogamp.java3d.utils.universe.Viewer;
 import java.net.URL;
+import java.util.Iterator;
 
 import solar.PointSoundBehavior;
 import org.jdesktop.j3d.examples.sound.audio.JOALMixer;
@@ -69,6 +70,9 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 	private static RingObjectsKS uranus;
 	private static RingObjectsKS neptune;
 	private static RingObjectsKS pluto;
+	private static RingObjectsKS box;
+	private static RingObjectsKS box1;
+	private static RingObjectsKS box2;
 	
     private static int control;
 	private static RingObjectsKS[] Object3D = new RingObjectsKS[404];
@@ -161,13 +165,17 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		sun = new Sun(CommonsKS.Blue, (float) 3, (float) 0.0f); // create the external object
         mercury = new Mercury(CommonsKS.White, (float) 1, (float) x); // create the external object
         venus = new Venus(CommonsKS.White, (float) 1.8, (float) 2); // create the external object
-        earth = new Earth(CommonsKS.White, (float) 1.9, (float) 3); // create the external object
+        earth = new Earth(CommonsKS.White, (float) 1.9,(float) 3); // create the external object 1.9
         mars = new Mars(CommonsKS.White, (float) 1.6, (float) 4); // create the external object
         jupiter = new Jupiter(CommonsKS.White, (float) 3.4, (float) 5); // create the external object
         saturn = new export("Saturn", CommonsKS.White, (float) 0.7, (float) 0.0, (float) 0.0f, (float) 6); // create
         uranus = new Uranus(CommonsKS.White, (float) 2.7, (float) 7); // create the external object 
         neptune = new Neptune(CommonsKS.White, (float) 2.3, (float) 8); // create the external object
         pluto = new Pluto(CommonsKS.White, (float) 0.7, (float) 9); // create the external object
+
+        box = new BoxCol(CommonsKS.Red, 0.1f,0.7f,0f,4.2f,5,0.8f,0.2f,soundJOAL);
+        box1 = new BoxCol(CommonsKS.Red, 0.1f,0.7f,0f,3.95f,1,1f,4.2f,soundJOAL);
+        box2 = new BoxCol(CommonsKS.Red, 0.1f,0.7f,0f,3.7f,5,0.8f,0.2f,soundJOAL);  
 
         Object3D[9] = new Meteor("meteor1", s1,CommonsKS.Grey,0f,0.26f,0.9f);
         Object3D[10] = new Meteor("meteor2", s2,CommonsKS.Grey,0f,0.26f,1.1f);
@@ -424,13 +432,19 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		R1.addChild(uranusTG);
 		R1.addChild(neptuneTG);
 		R1.addChild(plutoTG);
+        R1.addChild(box.position_Object());
+        R1.addChild(box1.position_Object());
+        R1.addChild(box2.position_Object());
 
         TransformGroup objTG = new TransformGroup();
 		Appearance app = CommonsKS.obj_Appearance(CommonsKS.Cyan);
 		objTG.addChild(Object3D[27].position_Object());
-		CommonsKS.enable_LOD(sceneBG,sceneTG,objTG);
-		//R1.addChild(CommonsKS.rotate_Behavior(5000,R1));
+        objTG.addChild(CommonsKS.rotate_Behavior(50000,objTG,alpha1));
 
+		// CommonsKS.enable_LOD(sceneBG,sceneTG,objTG);
+		//R1.addChild(CommonsKS.rotate_Behavior(5000,R1));
+        R1.addChild(objTG);
+        // TransformGroup newPosi = CollisionDetectShapes.gettrans();
 		//orbits
 		RingObjectsKS merOrb = new circle((float)x);
 		RingObjectsKS venOrb = new circle((float)2);
@@ -481,6 +495,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		
 		return sceneBG;
     }
+ 
+    
     /* NOTE: Keep the constructor for each of the labs and assignments */
 	public Assignment3KS(BranchGroup sceneBG) {
 		GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
@@ -515,17 +531,11 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
+
 	//Interaction using keyboard
 	@Override
     public void keyPressed(KeyEvent e) {
 
-        // if((e.getKeyCode() == KeyEvent.VK_R)){
-        // Transform3D uu = new Transform3D();
-        // uu.rotZ(Math.PI/2);
-        // trfm.mul(uu);
-
-        // }
-        // For revolution of planets
         if ((e.getKeyCode() == KeyEvent.VK_Y)) {
             if (y){ 
                 alpha1.pause();
@@ -1139,6 +1149,8 @@ public class Assignment3KS extends JPanel implements KeyListener,MouseListener {
 
             if (!soundJOAL.load("PlutoSound", 0f, 0f, 10f, true))
             System.out.println("Could not load " + "PlutoSound");
+            if (!soundJOAL.load("crash", 0f, 0f, 10f, true))
+            System.out.println("Could not load " + "crash");
           
         }
 
