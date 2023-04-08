@@ -65,6 +65,7 @@ public class CommonsKS extends JPanel {
 	public final static BoundingSphere hundredBS = new BoundingSphere(new Point3d(), 100.0);
 	public final static BoundingSphere twentyBS = new BoundingSphere(new Point3d(), 20.0);
 
+	public static KeyNavigatorBehavior myRotationbehavior;
 
     /* A1: function to define object's material and use it to set object's appearance */
 	public static Appearance obj_Appearance(Color3f m_clr) {		
@@ -228,8 +229,10 @@ public class CommonsKS extends JPanel {
 		sceneTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		sceneTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		sceneTG.addChild(objTG);
-		KeyNavigatorBehavior myRotationbehavior = new KeyNavigatorBehavior(sceneTG);
+		myRotationbehavior = new KeyNavigatorBehavior(sceneTG);
 		BehaviorArrowKey myViewRotationbehavior = new BehaviorArrowKey(sceneTG);
+		myRotationbehavior.setEnable(false);
+		myRotationbehavior.setUserData(0);
 		myRotationbehavior.setSchedulingBounds(new BoundingSphere());
 		sceneBG.addChild(myRotationbehavior);
 		myViewRotationbehavior.setSchedulingBounds(new BoundingSphere());
