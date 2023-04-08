@@ -23,15 +23,15 @@ package solar;
  
  public class Code4Assign5 extends JPanel implements ActionListener {
 	 private static final long serialVersionUID = 1L;	
-	 static final int width = 400;                            // size of each Canvas3D
-	 static final int height = 400;
+	 static final int width = 500;                            // size of each Canvas3D
+	 static final int height =500;
  
 	 // use hash table to map the name of a Viewer to its KeyNavigatorBehavior
 	 Hashtable<String, KeyNavigatorBehavior>	m_KeyHashtable = null;
 	 private Canvas3D[] canvas3D;
 	 private  Assignment3KS[] code4Assign4 = new Assignment3KS[3];
 	 Hashtable<String, MouseListener> m_MouseHashtable = null;
-	 
+	//  private static 
 	 public Code4Assign5( )	{
 		 m_KeyHashtable = new Hashtable<String, KeyNavigatorBehavior>( );
 		 m_MouseHashtable = new Hashtable<String, MouseListener>( );
@@ -43,6 +43,7 @@ package solar;
 		 for (int i = 0; i < 3; i++) {
 			 canvas3D[i] = new Canvas3D( config );
 			 canvas3D[i].setSize( width, height );
+			 canvas3D[i].setName("" + i);
 			 if (i > 0)
 				 code4Assign4[i] = new Assignment3KS(canvas3D[i]);
 			 add( canvas3D[i] );                            // add 3 Canvas3D to Frame
@@ -55,7 +56,7 @@ package solar;
 		Point3d center = new Point3d(0, 0, 0);             // define the point where the eye looks at
 		Vector3d up = new Vector3d(0, 1, 0);               // define camera's up direction
 		Transform3D view_TM = new Transform3D();
-		view_TM.lookAt(new Point3d(4.5d, 0.0d, 1.0d), center, up);
+		view_TM.lookAt(new Point3d(22.5d, 0.0d, 1.0d), center, up);
 		view_TM.invert();                  // rotate and position the 1st ~
 		//  t3d.setTranslation( new Vector3d( 6, 1.7, 8 ) );   // viewer looking down from top
 		//  t3d.invert( );
@@ -64,8 +65,8 @@ package solar;
  
 		 SimpleUniverse su = new SimpleUniverse(vp, viewer); // a SU with one Vp and 3 Viewers
 		 Locale lcl = su.getLocale();                        // point 2nd/3rd Viewer to c3D[1,2]
-		 lcl.addBranchGraph( createViewer( canvas3D[1], "F-L", CommonsXY.Orange, -3.5, 1, 3.5 ) );
-		 lcl.addBranchGraph( createViewer( canvas3D[2] , "B-R", CommonsXY.Cyan, -3.5, 1, 3.5 ) );
+		 lcl.addBranchGraph( createViewer( canvas3D[1], "Rocket", CommonsXY.Orange,0f, 0f, 4.5f) );
+		 lcl.addBranchGraph( createViewer( canvas3D[2] , "free View", CommonsXY.Cyan,4.5d, 0.0d, 1.0d  ) ); // -3.5, 1, 3.5
  
 		 BranchGroup scene = Assignment3KS.create_Scene();                  // create a one-cube scene
 		 TransformGroup scene_TG = new TransformGroup();
@@ -75,7 +76,9 @@ package solar;
 		 scene.compile();
 		 su.addBranchGraph( scene );
 	 }
-	 
+	 public static void  getBranch(){
+		
+	 }
 	 ViewingPlatform createViewer(Canvas3D canvas3D, String name, Color3f clr, 
 			 double x, double y, double z) {		
 		 // a Canvas3D can only be attached to a single Viewer
@@ -92,7 +95,7 @@ package solar;
 		 viewTM.lookAt(eye, center, up);
 		 viewTM.invert();  
 		 vp.getViewPlatformTransform().setTransform(viewTM);  // set VP with 'viewTG'
- 
+		//  vp.getViewPlatformTransform().addChild();
 		 // set TG's capabilities to allow KeyNavigatorBehavior modify the Viewer's position
 		 vp.getViewPlatformTransform( ).setCapability( TransformGroup.ALLOW_TRANSFORM_WRITE );
 		 vp.getViewPlatformTransform( ).setCapability( TransformGroup.ALLOW_TRANSFORM_READ );
@@ -157,13 +160,19 @@ package solar;
 			 if( keyAtIndex == key ) {
 				 if (n == 1) {
 					 canvas3D[1].addMouseListener(code4Assign4[1]);
+					 canvas3D[1].addKeyListener(code4Assign4[1]);
 					 Assignment3KS.playSound(1);
 					 canvas3D[2].removeMouseListener(code4Assign4[2]);
+					 canvas3D[2].removeKeyListener(code4Assign4[2]);
+
 				 }
 				 else {
 					 canvas3D[2].addMouseListener(code4Assign4[2]);
+					 canvas3D[2].addKeyListener(code4Assign4[2]);
 					 Assignment3KS.playSound(2);
 					 canvas3D[1].removeMouseListener(code4Assign4[1]);
+					 canvas3D[1].removeKeyListener(code4Assign4[1]);
+
 				 }
 			 }
 		 }
