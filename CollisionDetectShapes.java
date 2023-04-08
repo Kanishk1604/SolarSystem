@@ -4,17 +4,14 @@ package solar;
 
 import java.util.Iterator;
 
-import org.jogamp.java3d.Appearance;
-import org.jogamp.java3d.Behavior;
-import org.jogamp.java3d.ColoringAttributes;
-import org.jogamp.java3d.Shape3D;
-import org.jogamp.java3d.Transform3D;
-import org.jogamp.java3d.TransformGroup;
-import org.jogamp.java3d.WakeupCriterion;
-import org.jogamp.java3d.WakeupOnCollisionEntry;
-import org.jogamp.java3d.WakeupOnCollisionExit;
+import org.jogamp.java3d.utils.image.TextureLoader;
+import org.jogamp.java3d.utils.scenegraph.io.state.org.jogamp.java3d.TransformGroupState;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Vector3d;
+import org.jogamp.java3d.*;
+
+
+// import com.jogamp.opengl.util.texture.Texture;
 
 /* This behavior of collision detection highlights the
     object when it is in a state of collision. */
@@ -23,16 +20,20 @@ public class CollisionDetectShapes extends Behavior {
 	private Shape3D shape;
 	private ColoringAttributes shapeColoring;
 	private Appearance shapeAppearance;
+	private TransformGroup tr;
 	private WakeupOnCollisionEntry wEnter;
 	private WakeupOnCollisionExit wExit;
 	 private static SoundUtilityJOAL sound1;               
-	 private static TransformGroup t =null;
+
+	
 	public CollisionDetectShapes(Shape3D s,SoundUtilityJOAL ss) {
 		shape = s; // save the original color of 'shape"
 		shapeAppearance = shape.getAppearance();
 		shapeColoring = shapeAppearance.getColoringAttributes();
 		inCollision = false;
 		sound1 = ss;
+
+	
 	}
 	public static void playSound() {
         String snd_pt = "crash";
@@ -65,7 +66,9 @@ public class CollisionDetectShapes extends Behavior {
 		Color3f hilight = CommonsKS.Black;
 		ColoringAttributes highlight = new ColoringAttributes(hilightClr, ColoringAttributes.SHADE_GOURAUD);
 		ColoringAttributes highlight2 = new ColoringAttributes(hilight, ColoringAttributes.SHADE_GOURAUD);
-
+		TransparencyAttributes ta = new TransparencyAttributes(TransparencyAttributes.SCREEN_DOOR, 0f);
+		Transform3D y  = new Transform3D();
+		y.setTranslation(new Vector3d(1,1,4.6));
         // sound1 = new SoundUtilityJOAL();
 		inCollision = !inCollision; // collision has taken place
 
@@ -79,9 +82,10 @@ public class CollisionDetectShapes extends Behavior {
 			// shapeAppearance.setColoringAttributes(shapeColoring);
 			// wakeupOn(wEnter); // wait for collision happens
 			playSound();
-
+			// shapeAppearance.setTexture(t);
 			shapeAppearance.setColoringAttributes(highlight2);
-
+			// shapeAppearance.setTransparencyAttributes(ta);
+			
 		}
 	}
 }
